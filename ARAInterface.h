@@ -3209,7 +3209,15 @@ enum { kARAFactoryMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAFactory, supportedPla
 //! companion APIs to a specific ARA model graph, represented by its associated document controller.
 //! This setup call is executed via a vendor-specific extension of the companion API and may only be
 //! made once. It shifts the "normal" companion plug-in into the ARA world, and once established, this
-//! coupling cannot be undone.
+//! coupling cannot be undone, it remains active until the plug-in instance is destroyed.
+//! \br
+//! Note that both performing the explicit binding and the implicit unbinding upon destruction will
+//! likely need to access plug-in internal data structures shared with with the document controller
+//! implementation. To avoid adding costly thread safety measures when maintaining this shared state,
+//! hosts should always perform these operations from the document controller thread (typically the
+//! main thread). This restriction may or may not apply when using the same companion API without ARA,
+//! so host developers might need to add extra precaution for the ARA case.
+//! \br
 //! When ARA is enabled, the renderer behavior has slightly different semantics compared to the
 //! non-ARA use case. Since ARA renderers are essentially generators that use non-realtime data to
 //! generate realtime signals, they do not use the realtime input signal for processing.
