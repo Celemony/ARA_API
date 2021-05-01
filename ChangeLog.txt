@@ -5,6 +5,7 @@ Postponed Features (will likely not be part of ARA 2.0 but of a later subrelease
 - ARM support, particularly for Apple Silicon (currently in draft state)
 - Audio Unit version 3 support (AppExtension)
 - undo history integration
+- support for ARA audio file chunk authoring directly in the host
 - waveform envelope overview (previous draft temporarily removed until after ARA 2.0 release)
 - support for dynamic tuning such as Hermode (previous draft temporarily removed until after ARA 2.0 release)
 - support for automatic adaption of tuning and harmonic context (previous draft temporarily removed until after ARA 2.0 release)
@@ -13,6 +14,7 @@ Changes since previous releases:
 
 ARA SDK 2.0 draft 15 (aka 1.9.15) (2021/??/??)
 - outdated documentation for ARAFactory::factoryID fixed, related chapter "Managing ARA Archives" rewritten
+- clarified intended use cases and optimization criteria for ARA audio file chunks
 - clarified possible line feeds in base64 encoding of ARA audio file chunk archive data
 - added dedicated section about "Preview Rendering" to "Configuring The Rendering" in chapter "Implementing ARA"
 

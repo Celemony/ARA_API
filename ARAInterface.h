@@ -2800,7 +2800,8 @@ typedef struct ARADocumentControllerInterface
 //! fine, they are not suitable for more elaborate features such as copying and pasting audio source
 //! and audio modification state between songs.
 //! ARA 2.0 therefore adds the option to store and restore arbitrary subsections of an ARA graph.
-//! Such partial archives may even be stored inside an audio file - see \ref ARAAudioFileChunks.
+//! Such partial archives may even be restored from ARA-specific chunks inside an audio file - see
+//! \ref ARAAudioFileChunks.
 //! Using partial persistency is optional on the host side, but ARA 2 plug-ins are required to fully
 //! support it.
 //! \br
@@ -2888,6 +2889,8 @@ typedef struct ARADocumentControllerInterface
     //! archive, kARATrue otherwise.
     //! The host is responsible for alerting the user about archive write errors,
     //! see ARAArchivingControllerInterface::writeBytesToArchive().
+    //! Note that this call is not suitable for creating ARA audio file chunk archives, due to the
+    //! very different optimization criteria that apply in that context, see \ref ARAAudioFileChunks.
     ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *storeObjectsToArchive) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef writerHostRef,
                                                                        const ARAStoreObjectsFilter * filter);
 //@}

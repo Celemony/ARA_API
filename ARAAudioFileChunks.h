@@ -33,24 +33,58 @@ extern "C"
 /***************************************************************************************************/
 //! @defgroup ARAAudioFileChunks ARA Audio File Chunks
 //!
-//! To exchange persistent ARA audio source state information between compatible ARA applications,
-//! ARA 2.0 defines a format for embedding these states into standardized audio file chunks.
+//! To allow for distributing persistent ARA audio source state information together with the
+//! underlying audio file in a way that is transparent to the plug-ins and can be supported by all
+//! hosts, ARA 2.0 defines a format for embedding such states into standardized audio file chunks.
 //! From there, they can be imported into any ARA document using @ref Partial_Document_Persistency.
-//! It is possible to store this data for multiple plug-ins, for example if some sample content
-//! provider wants to ship the content with properly validated audio source analysis for various
-//! plug-ins readily included.
-//! Other use cases include migrating data from one plug-in to another, or adding ARA objects to a
-//! host document via drag and drop from a plug-in that ships with a built-in sound library.
+//! \br
+//! The most obvious use case for this is that it enables audio content providers to ship audio
+//! files with properly validated, ready-to-use audio source analysis for multiple plug-ins (or
+//! incompatible versions of a plug-in if needed).
+//! For example, this allows for loading polyphonic audio loops into Melodyne without time-consuming
+//! analysis and very quickly adjusting them to follow the song key and chord progression, making
+//! the published audio material much more versatile to use in various productions.
+//! Other scenarios where such file chunks are used include exporting data from one plug-in to
+//! another, or adding ARA objects to a host document via dragging and dropping audio files from
+//! a plug-in that either generates these files on the fly (e.g. export of layers in SpectraLayers)
+//! or copies them from a built-in sound library.
+//! \br
+//! The ARA chunk should be evaluated by the host both when adding a new audio file to the
+//! arrangement and when applying a new/different ARA plug-in for a region/file already used in
+//! the arrangement.
 //! Note that after loading the data, ARA content readers can be used to extract more information
-//! about the audio source, such as tempo map, time and key signatures, etc.
-//! The ARA chunk should be evaluated both when adding a new audio file to the arrangement and when
-//! applying a new ARA plug-in for an audio file already used in the arrangement.
-//!
-//! Covering both aif and wav formats, ARA stores its data by extending iXML, see http://www.ixml.info
-//! Inside the iXML document, there's a custom tag \<ARA\> that encloses a dictionary of audio source
-//! archives, encoded as array tagged \<audioSources\>. Each entry in the array contains the tag
+//! about the audio source - such as tempo map, time and key signatures, etc.
+//! \br
+//! Plug-in vendors shall optimize the encoding of the audio source state information for audio file
+//! chunks according to very different criteria compared to encoding the same state for regular
+//! ARA song document archives:
+//! The audio file states are going to be widely distributed and will be used over a long period
+//! of time in very different contexts, whereas song documents are typically only used on a single
+//! machine for a rather short time. Audio file archives therefore should emphasize small data size
+//! over en-/decoding speed - encoding is only done once, and decoding only happens for a single
+//! audio source at a time (compared to hundreds of audio sources in a typical song archive).
+//! Even more important, audio file archives are likely going to be used across a wide range of
+//! products versions and shall be stable across a long time. The encoding should therefore be as
+//! much backwards compatible as possible, potentially even using different encoding based on the
+//! current state of the audio source: if e.g. a particular non-backwards compatible feature of
+//! the plug-in is not used in the given state, the plug-in can choose an older format to store
+//! the data than if that particular feature was utilized.
+//! For these reasons, audio file chunks will typically not use the ARAFactory::documentArchiveID
+//! but instead one of the IDs listed in ARAFactory::compatibleDocumentArchiveIDs.
+//! \br
+//! Creating audio file chunks may not be meaningful nor supported for any given plug-in. If for
+//! example the plug-in does not perform any costly analysis and has no relevant editable audio
+//! source state, there is no reason to create audio file chunks for it. Therefore, creating such
+//! chunks is currently done only through dedicated authoring tools (such as Melodyne's standalone
+//! version) and not directly available in ARA host applications.
+//! \br
+//! Covering both AIFF and WAVE formats, ARA stores its data by extending iXML chunks as specified
+//! here: http://www.ixml.info
+//! Inside the iXML document, there's a custom tag \<ARA\> that encloses a dictionary of audio
+//! source archives, encoded as array tagged \<audioSources\>. Each entry in the array is intended
+//! for a different plug-in (or incompatible version fo a plug-in) and contains the tag
 //! \<documentArchiveID\> which also functions as the key for the dictionary, and associated data
-//! which includes the actual binary archive, for example:
+//! which includes the actual binary archive and meta information, for example:
 //! \code{.xml}
 //! <ARA>
 //!     <audioSources>
