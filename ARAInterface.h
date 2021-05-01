@@ -3091,14 +3091,16 @@ enum { kARAInterfaceConfigurationMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAInterf
     ARAAPIGeneration lowestSupportedApiGeneration;  //!< Lower bound of supported ARAAPIGeneration.
     ARAAPIGeneration highestSupportedApiGeneration; //!< Upper bound of supported ARAAPIGeneration.
 
-    //! Unique plug-in identifier.
+    //! Unique and versioned plug-in identifier.
     //! This ID must be globally unique and identifies the plug-in's document controller class
-    //! that can be created by this factory.
+    //! created by this factory at runtime.
+    //! The ID includes versioning, it must be updated if e.g. the plug-in's (compatible) document
+    //! archive ID(s) or its analysis or playback transformation capabilities change.
+    //! Host applications can therefore use it to trigger cache updates if they implement a plug-in
+    //! caching mechanism to avoid scanning all plug-ins each time the program is launched.
     //! If a given plug-in supports multiple companion APIs, it will return the same ID across all
     //! companion APIs, allowing the host to choose which API to use for this particular plug-in.
-    //! The ID will be persistent in document archives that the host creates, but it also can be
-    //! stored in plug-in caches as often implemented by host applications in order to avoid
-    //! scanning all plug-ins each time the program is launched.
+    //! See @ref sec_ManagingARAArchives for more information.
     ARAPersistentID factoryID;
 
     //! Start up ARA with the given configuration.
@@ -3113,6 +3115,7 @@ enum { kARAInterfaceConfigurationMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAInterf
 //! document archive that the host creates in order to be able to provide a proper error message if
 //! the archive is being restored on a different system where the plug-in is not installed (or only
 //! an older version of it).
+//! See @ref sec_ManagingARAArchives for more information.
 //@{
     //! Name of the plug-in to display to the user.
     ARAUtf8String plugInName;
@@ -3144,6 +3147,7 @@ enum { kARAInterfaceConfigurationMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAInterf
     //! create the same archives and produce the same render results based upon the same input data.
     //! This means that the ID must be updated if the archive format changes in any way that is
     //! no longer downwards compatible.
+    //! See @ref sec_ManagingARAArchives for more information.
     ARAPersistentID documentArchiveID;
 
     //! Length of compatibleDocumentArchiveIDs.
