@@ -2412,6 +2412,17 @@ typedef struct ARADocumentControllerInterface
     void (ARA_CALL *beginEditing) (ARADocumentControllerRef controllerRef);
 
     //! End an editing session on a document.
+    //! Note that when receiving this call, the plug-in will update any amount of internal state.
+    //! These edits may lead to update notifications to the host, and the host may in turn read
+    //! affected content from the plug-in and update its own model accordingly.
+    //! One example for this the way that Melodyne maintains chords and scales associated with
+    //! audio modifications. It copies this data from the musical context into the audio
+    //! modifications, so that when editing regions the notes appear in the proper pitch grid.
+    //! If moving playback regions in the song, these copies may need to be updated, and Melodyne
+    //! will report the resulting audio modification content changes to the host.
+    //! To ensure that any such follow-up updates are added to the same undo cycle, hosts that
+    //! actively read plug-in content data should immediately (i.e. within the same undo frame)
+    //! call notifyModelUpdates() after making this call.
     void (ARA_CALL *endEditing) (ARADocumentControllerRef controllerRef);
 
     //! Tell the plug-in to send all pending update notifications for the given document.
