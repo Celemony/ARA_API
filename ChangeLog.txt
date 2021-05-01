@@ -13,6 +13,7 @@ Changes since previous releases:
 
 ARA SDK 2.0 draft 15 (aka 1.9.15) (2021/??/??)
 - outdated documentation for ARAFactory::factoryID fixed, related chapter "Managing ARA Archives" rewritten
+- clarified possible line feeds in base64 encoding of ARA audio file chunk archive data
 - added dedicated section about "Preview Rendering" to "Configuring The Rendering" in chapter "Implementing ARA"
 
 ARA SDK 2.0 draft 14 (aka 1.9.14) (2021/02/26)

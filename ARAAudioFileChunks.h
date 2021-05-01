@@ -102,8 +102,9 @@ extern "C"
     //! plug-in will use this persistent ID to find the target object to extract the state to.
     //! string value, see ARAAudioSourceProperties::persistentID, see ARARestoreObjectsFilter.
     constexpr auto kARAXMLName_PersistentID { "persistentID" };
-    //! Name of the XML element inside an audio source archive that encodes the actual binary data.
-    //! of the archive in Base64 format.
+    //! Name of the XML element inside an audio source archive that encodes the actual binary data
+    //! of the archive in Base64 format, with the possible addition of line feeds as allowed by MIME.
+    //! Note that it is preferred to encode without line feeds, but decoders must handle both cases.
     //! string value, see ARAArchivingControllerInterface, see https://tools.ietf.org/html/rfc4648.
     constexpr auto kARAXMLName_ArchiveData { "archiveData" };
 
