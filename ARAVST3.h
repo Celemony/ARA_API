@@ -122,7 +122,7 @@ namespace ARA
 //! For rendering and editing the model however, there must be an associated IAudioProcessor class
 //! provided in the same binary.
 //! This match is usually trivial because there typically is only one such class in the binary, but
-//! there are cases such as WaveShell where mutiple plug-ins live in the same binary, and only a
+//! there are cases such as WaveShell where multiple plug-ins live in the same binary, and only a
 //! subset of those plug-ins support ARA. In this scenario, the plug-in must use the same class name
 //! for the matching pair of ARA::IMainFactory and IAudioProcessor classes - this enables the host
 //! to quickly identify the matching pairs without having to create instances of all the
@@ -164,7 +164,7 @@ public:
     //! to ARA mode, and exposing the ARA plug-in extension.
     //! Note that since ARA 2.0, this call has been deprecated and replaced with
     //! bindToDocumentControllerWithRoles ().
-    //! This deprecated call is eqivalent to the new call with no known roles set, however all
+    //! This deprecated call is equivalent to the new call with no known roles set, however all
     //! ARA 1.x hosts are in fact using all instances with playback renderer, edit renderer and
     //! editor view role enabled, so plug-ins implementing ARA 1 backwards compatibility can
     //! safely assume those three roles to be enabled if this call was made.
@@ -180,7 +180,7 @@ DECLARE_CLASS_IID (IPlugInEntryPoint, 0x12814E54, 0xA1CE4076, 0x82B96813, 0x1695
 class ARA_ADDENDUM (2_0_Draft) IPlugInEntryPoint2: public Steinberg::FUnknown
 {
 public:
-    //! Extendend version of bindToDocumentController ():
+    //! Extended version of bindToDocumentController ():
     //! bind the VST3 instance to an ARA document controller, switching it from "normal" operation
     //! to ARA mode with the assigned roles, and exposing the ARA plug-in extension.
     //! \p knownRoles encodes all roles that the host considered in its implementation and will explicitly

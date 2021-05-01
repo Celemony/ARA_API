@@ -133,7 +133,7 @@ enum ARA_DEPRECATED(2_0_Draft)
     //! operation to ARA mode, and exposing the ARA plug-in extension.
     //! Note that since ARA 2.0, this property has been deprecated and replaced with
     //! kAudioUnitProperty_ARAPlugInExtensionBindingWithRoles.
-    //! This deprecated call is eqivalent to the new call with no known roles set, however all
+    //! This deprecated call is equivalent to the new call with no known roles set, however all
     //! ARA 1.x hosts are in fact using all instances with playback renderer, edit renderer and
     //! editor view role enabled, so plug-ins implementing ARA 1 backwards compatibility can
     //! safely assume those three roles to be enabled if this call was made.
@@ -142,7 +142,7 @@ enum ARA_DEPRECATED(2_0_Draft)
 };
 enum ARA_ADDENDUM(2_0_Draft)
 {
-    //! ARA 2 extendend version of kAudioUnitProperty_ARAPlugInExtensionBinding:
+    //! ARA 2 extended version of kAudioUnitProperty_ARAPlugInExtensionBinding:
     //! kAudioUnitScope_Global, read-only, property data is ARAAudioUnitPlugInExtensionBinding:
     //! bind the Audio Unit instance to an ARA document controller, switching it from "normal"
     //! operation to ARA mode with the assigned roles, and exposing the ARA plug-in extension.

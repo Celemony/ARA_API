@@ -19,6 +19,7 @@ ARA SDK 2.0 draft 15 (aka 1.9.15) (2021/??/??)
 - clarified intended use cases and optimization criteria for ARA audio file chunks
 - clarified possible line feeds in base64 encoding of ARA audio file chunk archive data
 - added dedicated section about "Preview Rendering" to "Configuring The Rendering" in chapter "Implementing ARA"
+- various minor documentation cleanups/improvements
 
 ARA SDK 2.0 draft 14 (aka 1.9.14) (2021/02/26)
 - applied Apache License 2.0

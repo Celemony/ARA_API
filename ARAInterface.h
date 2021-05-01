@@ -69,7 +69,7 @@
 
 
 /***************************************************************************************************/
-// Auxillary defines for Doxygen code generation, must evaluate to 0 for actual code compilation
+// Auxiliary defines for Doxygen code generation, must evaluate to 0 for actual code compilation
 
 // Enable this when building Doxygen documentation
 #if !defined(ARA_DOXYGEN_BUILD)
@@ -94,7 +94,7 @@ extern "C"
 // As a workaround, ARA started using 1-byte packing. However, this causes some members in some of
 // the ARA structs to be not naturally aligned on 64 bit systems. But moreover, this also affects
 // the possible alignment of all ARA structs in some compilers. Thus developers that directly use
-// the C API must carefuly align any data that they pass across the API boundary in order to avoid
+// the C API must carefully align any data that they pass across the API boundary in order to avoid
 // performance penalties. When using the ARA library C++ dispatch code, the SizedStruct<> template
 // which is used as central low-level wrapper for any data crossing the API takes care of this issue.
 #if defined(_MSC_VER) || defined(__GNUC__)
@@ -121,7 +121,7 @@ extern "C"
 
 
 /***************************************************************************************************/
-//! @addtogroup API_generations API generations
+//! @addtogroup API_generations API Generations
 // Macros to mark API added or deprecated as the API evolves - see ARAAPIGeneration.
 //! @{
 
@@ -191,7 +191,7 @@ extern "C"
 
 
 /***************************************************************************************************/
-//! @defgroup Fixed-size_integers Fixed-size integers
+//! @defgroup Fixed-size_integers Fixed-size Integers
 //! ARA defines platform-independent signed integers with fixed size of 32 or 64 bits
 //! and for a pointer-sized signed integer.
 //! @{
@@ -212,7 +212,7 @@ typedef size_t ARASize;
 
 
 /***************************************************************************************************/
-//! @defgroup Boolean_values Boolean values
+//! @defgroup Boolean_values Boolean Values
 //! Since Microsoft still doesn't fully support C99 and fails to provide <stdbool.h>,
 //! we need to roll our own. On the other hand this ensures a fixed size of 32 bits, too.
 //! 32 bits were chosen so that ARABool is consistent with the other enum-like data types such as
@@ -293,7 +293,7 @@ typedef const ARAUtf8Char * ARAUtf8String;
 
 
 /***************************************************************************************************/
-//! @defgroup Common_time-related_data_types Common time-related data types
+//! @defgroup Common_time-related_data_types Common Time-Related Data Types
 //! Some basic data types used in several contexts.
 //! @{
 
@@ -321,7 +321,7 @@ typedef double ARAQuarterDuration;
 
 
 /***************************************************************************************************/
-//! @defgroup Sampled_audio_data Sampled audio data
+//! @defgroup Sampled_audio_data Sampled Audio Data
 //! The audio samples are encoded using these format descriptions.
 //! The data alignment and byte order always matches the machine's native layout.
 //! @{
@@ -362,7 +362,7 @@ ARA_ADDENDUM(2_0_Draft) typedef struct ARAColor
 //! @{
 
 //! @name Markup Types
-//! Typesafe representations of the opaque refs/host refs.
+//! Type-safe representations of the opaque refs/host refs.
 //! The markup types allow for overloaded custom conversion functions if using C++,
 //! or for re-defining the markup types to actual implementations in C like this:
 //! \code{.c}
@@ -429,7 +429,7 @@ typedef const char * ARAPersistentID;
 #pragma mark Versioning support
 #endif
 
-//! @defgroup API_versions API versions
+//! @defgroup API_versions API Versions
 //! ARA implements two patterns for its ongoing evolution of the API: incremental, fully-backwards
 //! compatible additions by appending features to it versioned structs, and major, potentially
 //! incompatible updates through its API generations.
@@ -438,7 +438,7 @@ typedef const char * ARAPersistentID;
 
 
 /***************************************************************************************************/
-//! @defgroup API_generations API generations
+//! @defgroup API_generations API Generations
 //! While purely additive features can be handled through ARA's versioned structs,
 //! ARA API generations allow for non-backwards-compatible, fundamental API changes.
 //! For hosts that rely on a certain minimum ARA feature set provided by the plug-ins, it also
@@ -492,7 +492,7 @@ typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
 //! parameter provided to ARA_IMPLEMENTED_STRUCT_SIZE should be updated accordingly.
 //! \br
 //! The ARA library C++ dispatchers implement a similar feature via templates,
-//! see ARA::SizedStruct <>.
+//! see ARA::SizedStruct<>.
 #if defined(__cplusplus)
     #define ARA_IMPLEMENTED_STRUCT_SIZE(StructType, memberName) (offsetof(ARA::StructType, memberName) + sizeof((static_cast<ARA::StructType *> (nullptr))->memberName))
 #else
@@ -503,7 +503,7 @@ typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
 //! Convenience macro to test if a field is present in a given struct.
 //! \br
 //! The ARA library C++ dispatchers implement a similar feature via templates,
-//! see ARA::SizedStructPtr::implements <>().
+//! see ARA::SizedStructPtr::implements<>().
 #if defined(__cplusplus)
     #define ARA_IMPLEMENTS_FIELD(pointerToStruct, StructType, memberName) \
                                  ((pointerToStruct)->structSize > offsetof(ARA::StructType, memberName))
@@ -615,8 +615,8 @@ typedef void (ARA_CALL * ARAAssertFunction) (ARAAssertCategory category, const v
 //! This allows plug-ins to deal with any render thread synchronization that may be necessary,
 //! as well as postponing any internal updates until the end of the cycle when the ARA graph has
 //! its full state available.
-//! A document can contain 0..n audio sources and 0..m musical contexts.
-//! A document is the root object for persistency.
+//! A document is the root object for persistency and is the owner of any amount of associated
+//! audio sources, region sequences and musical contexts.
 //! \br
 //! Plug-in developers using the C++ ARA Library can use the ARA::PlugIn::Document class.
 //! @{
@@ -648,7 +648,7 @@ enum { kARADocumentPropertiesMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARADocumentPr
 //! @defgroup Model_Musical_Context Musical Context
 //! A musical context describes both rhythmical concepts of the music such as bars and beats and
 //! their distribution over time, as well as harmonic structures and their distribution over time.
-//! A musical context is always linked to one document.
+//! A musical context is always owned by one document.
 //! Musical contexts are not persistent when storing documents, instead the host re-creates them
 //! as needed.
 //! \br
@@ -697,7 +697,7 @@ enum { kARAMusicalContextPropertiesMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAMusi
 
 
 /***************************************************************************************************/
-//! @defgroup Model_Region_Sequences Region Sequences (added in ARA 2.0)
+//! @defgroup Model_Region_Sequences Region Sequences (Added In ARA 2.0)
 //! Region sequences allow hosts to group playback regions, typically by "tracks" or "lanes" in
 //! their arrangement.
 //! Each sequence is associated with a musical context, and all regions in a sequence will be adapted
@@ -705,7 +705,7 @@ enum { kARAMusicalContextPropertiesMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAMusi
 //! Further, all regions within a sequence are expected to play back through the same routing (incl.
 //! same latency), typically the same "mixer track" or "audio channel".
 //! Regions in a sequence can overlap, and such overlapping regions will sound concurrently.
-//! A region sequence is always linked to one document.
+//! A region sequence is always owned by one document, and refers to a musical context.
 //! Region sequences are not persistent when storing documents, instead the host re-creates them
 //! as needed.
 //! \br
@@ -763,9 +763,9 @@ enum ARA_ADDENDUM(2_0_Draft) { kARARegionSequencePropertiesMinSize = ARA_IMPLEME
 //! create an audio source object for each audio file used with ARA plug-ins.
 //! Conceptually, the contents of an audio source are immutable (even though updates are possible,
 //! this is an expensive process, and user edits based on the modified content may get lost).
-//! An audio source is alway linked to one document.
-//! 0..n audio modifications may be linked to a given audio source.
-//! An audio source is persistent when storing documents.
+//! An audio source is always owned by one document, and in turn owns any amount of associated
+//! audio modifications.
+//! Audio sources are persistent when storing documents.
 //! \br
 //! Plug-in developers using the C++ ARA Library can use the ARA::PlugIn::AudioSource class.
 //! @{
@@ -838,9 +838,9 @@ enum { kARAAudioSourcePropertiesMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAAudioSo
 //! @defgroup Model_Audio_Modification Audio Modification
 //! An audio modification contains a set of musical edits that the user has made to transform
 //! the content of an audio source when rendered by the ARA plug-in.
-//! An audio modification is always linked to one audio source.
-//! 0..n playback regions may be linked to a given audio modification.
-//! An audio modification is persistent when storing documents.
+//! An audio modification is always owned by one audio source, and in turn owns any amount of
+//! associated playback regions.
+//! Audio modifications are persistent when storing documents.
 //! \br
 //! Plug-in developers using the C++ ARA Library can use the ARA::PlugIn::AudioModification class.
 //! @{
@@ -890,6 +890,7 @@ enum { kARAAudioModificationPropertiesMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAA
 //! Note that if a plug-in offers any user settings to control this adaptation (such as groove settings),
 //! then these settings should be part of the audio modification state, not of the individual
 //! playback regions.
+//! A playback is always owned by one audio modification, and refers to a region sequence.
 //! Playback regions are not persistent when storing documents, instead the host re-creates them
 //! as needed.
 //! \br
@@ -960,7 +961,7 @@ typedef struct ARAPlaybackRegionProperties
     //! #startInModificationTime and #durationInModificationTime define the
     //! audible audio modification time range. This section of the modification's audio data will
     //! be mapped to the song playback time range defined below as configured by the #transformationFlags,
-    //! including optional time stretching. See @ref sec_manipulatingTiming for more information.
+    //! including optional time stretching. See @ref sec_ManipulatingTheTiming for more information.
     ARATimePosition startInModificationTime;
 
     //! See #startInModificationTime. \br
@@ -984,7 +985,7 @@ typedef struct ARAPlaybackRegionProperties
     //! \deprecated
     //! No longer used since adding region sequences in ARA 2.0, which already define the musical
     //! context for all their respective regions. If structSize indicates that a sequence is used
-    //! (i.e. when using ARA 2.0 or higher), this field should be ignored by plug-ins. Hosts are
+    //! (i.e. when using ARA 2.0 or higher), this field must be ignored by plug-ins. Hosts are
     //! free to additionally set a valid musical context if desired for ARA 1 backwards compatibility,
     //! or leave the field uninitialized otherwise.
     ARA_DEPRECATED(2_0_Draft) ARAMusicalContextRef musicalContextRef;
@@ -1094,7 +1095,7 @@ typedef ARA_32_BIT_ENUM(ARAContentUpdateFlags)
 
 
 /***************************************************************************************************/
-//! @defgroup Model_Content_Readers_and_Content_Events Content Readers and Content Events
+//! @defgroup Model_Content_Readers_and_Content_Events Content Readers And Content Events
 //! \br
 //! Reading content description follows the same pattern both from the host and from the plug-in side.
 //! ARA establishes iterator objects called content reader to access the data in small units called
@@ -1388,8 +1389,7 @@ typedef struct ARAContentNote
 
 
 /***************************************************************************************************/
-//! Tuning, Key Signatures and Chords (added in ARA 2.0)
-//! @defgroup Model_Tuning_Key_Signatures_and_Chords Tuning, Key Signatures and Chords
+//! @defgroup Model_Tuning_Key_Signatures_and_Chords Tuning, Key Signatures and Chords (Added In ARA 2.0)
 //! \br
 //! ARA expresses "western standard" octave-cyclic, 12-tone scales as tunings and key signatures.
 //! While some applications such as Melodyne offer a much more complex model that allows for acyclic
@@ -1430,7 +1430,7 @@ ARA_ADDENDUM(2_0_Final) typedef ARAInt32 ARACircleOfFifthsIndex;
 //! is called again or the reader is destroyed via destroyContentReader().
 ARA_ADDENDUM(2_0_Final) typedef struct ARAContentTuning
 {
-    //! Frequency of the concert pitch 'A' in herz, defaulting to kARADefaultConcertPitchFrequency aka 440.0f.
+    //! Frequency of the concert pitch 'A' in hertz, defaulting to kARADefaultConcertPitchFrequency aka 440.0f.
     float concertPitchFrequency;
 
     //! Root key for the following per-key tunings.
@@ -1448,7 +1448,7 @@ ARA_ADDENDUM(2_0_Final) typedef struct ARAContentTuning
     //! User-readable name of the tuning as displayed in the content provider.
     //! The tuning name may or may not include the root note, depending on context - for example,
     //! equal temperament does not care about the root note so it is always omitted, Werckmeister
-    //! tunings typically imply a root note of C unless noted explictily otherwise, etc.
+    //! tunings typically imply a root note of C unless noted explicitly otherwise, etc.
     //! The name is provided only for display purposes, in case the receiver wants to display the
     //! tuning exactly as done in the sender instead of utilizing its built-in naming system for
     //! tunings based on the above properties.
@@ -1511,7 +1511,7 @@ ARA_ADDENDUM(2_0_Final) typedef struct ARAContentKeySignature
     //! (including the root note name).
     //! Typically, the receiver has a built-in system to generate a suitable name for a key
     //! signature based on its internal abstractions. However, this internal model might cover all
-    //! states that the ARA model can provide, or vica versa. If there is such a mismatch, the
+    //! states that the ARA model can provide, or vice versa. If there is such a mismatch, the
     //! internal name generation algorithm will likely fail - in which case the receiver may fall
     //! back to the string provided here.
     //! Note that the utility library that ships with the ARA SDK contains C++ code that can create
@@ -1582,7 +1582,7 @@ typedef ARAByte ARAChordIntervalUsage;
 //! The event position relates to ARAContentTempoEntry, a valid tempo map must be provided
 //! by any provider of ARAContentBarSignature.
 //! Each chord is valid until the following one, and the first chord is assumed to also be valid
-//! any time before it is actually defined (i.e. its position is effectivly ignored).
+//! any time before it is actually defined (i.e. its position is effectively ignored).
 //! The "undefined chord" markup (all intervals unused) can be used to express a range where no
 //! chord is applicable. Such gaps may appear between "regular" chords, or they can be used
 //! to limit the otherwise infinite duration of the first and last "regular" chord if desired.
@@ -1626,7 +1626,7 @@ ARA_ADDENDUM(2_0_Final) typedef struct ARAContentChord
     //! (including the root note name).
     //! Typically, the receiver has a built-in system to generate a suitable name for a chord
     //! based on its internal abstractions. However, this internal model might cover all
-    //! states that the ARA model can provide, or vica versa. If there is such a mismatch, the
+    //! states that the ARA model can provide, or vice versa. If there is such a mismatch, the
     //! internal name generation algorithm will likely fail - in which case the receiver may fall
     //! back to the string provided here.
     //! Note that the utility library that ships with the ARA SDK contains C++ code that can create
@@ -2013,7 +2013,7 @@ typedef struct ARAModelUpdateControllerInterface
     //! somewhat by the time the start notification is actually delivered, so it may start with a
     //! progress larger than 0. It is even possible that an analysis fully completes before its
     //! start is notified, in which case the plug-in may choose not notify it at all.
-    //! If the plug-in internally executes multiple analysis task per audio source simultanously
+    //! If the plug-in internally executes multiple analysis task per audio source simultaneously
     //! (for example because it splits them by content type), it must merge all internal progress
     //! into a single outer progress.
     void (ARA_CALL *notifyAudioSourceAnalysisProgress) (ARAModelUpdateControllerHostRef controllerHostRef, ARAAudioSourceHostRef audioSourceHostRef,
@@ -2429,7 +2429,7 @@ typedef struct ARADocumentControllerInterface
     //! This must be called periodically by the host whenever not editing nor restoring the document.
     //! Only when processing this call, the plug-in may call back into the host using
     //! ARAModelUpdateControllerInterface.
-    //! Hosts must be aware after receving beginEditing(), plug-ins may choose to postpone any subset
+    //! Hosts must be aware after receiving beginEditing(), plug-ins may choose to postpone any subset
     //! of their internal state updates until the matching call to endEditing(). This means that if
     //! the host for some reason needs to wait for a specific update in the plug-in to occur
     //! (such as waiting for an analysis to finish) it must do so outside of pairs of beginEditing()
@@ -2624,10 +2624,10 @@ typedef struct ARADocumentControllerInterface
 //! Content readers are not model objects but rather auxiliary objects to parse content without
 //! extensive data copying, following a standard iterator pattern.
 //! As is common with iterators, no changes may be made to the model graph while reading content.
-//! Prior to the final release of ARA 2.0, this ment that making any of the content related calls
+//! Prior to the final release of ARA 2.0, this meant that making any of the content related calls
 //! was limited to be done outside of pairs of beginEditing() and endEditing().
 //! Since version 2_0_Final, it is also valid to use them while the document is in editing state,
-//! but no other call to this document controller may be made inbetween a series of content related
+//! but no other call to this document controller may be made in-between a series of content related
 //! calls (except for getFactory() and getPlaybackRegionHeadAndTailTime()).
 //! For example for a given audio source such a series of calls typically would be
 //! isAudioSourceContentAvailable(), getAudioSourceContentGrade(), createAudioSourceContentReader(),
@@ -2760,12 +2760,12 @@ typedef struct ARADocumentControllerInterface
 
     //! Update the properties of a given region sequence.
     //! All properties must be specified, the plug-in will determine which have actually changed.
-    ARA_ADDENDUM(2_0_Draft) void (ARA_CALL *updateRegionSequenceProperties) (ARADocumentControllerRef controllerRef, ARARegionSequenceRef regionSequencRef,
+    ARA_ADDENDUM(2_0_Draft) void (ARA_CALL *updateRegionSequenceProperties) (ARADocumentControllerRef controllerRef, ARARegionSequenceRef regionSequenceRef,
                                                                              const ARARegionSequenceProperties * properties);
 
     //! Destroy a given region sequence.
     //! The region sequence must no longer be referred to by any playback region when making this call.
-    ARA_ADDENDUM(2_0_Draft) void (ARA_CALL *destroyRegionSequence) (ARADocumentControllerRef controllerRef, ARARegionSequenceRef regionSequencRef);
+    ARA_ADDENDUM(2_0_Draft) void (ARA_CALL *destroyRegionSequence) (ARADocumentControllerRef controllerRef, ARARegionSequenceRef regionSequenceRef);
 //@}
 
 //! @name Playback Region Head and Tail Time (added in ARA 2.0)
@@ -2816,11 +2816,11 @@ typedef struct ARADocumentControllerInterface
 //! Using partial persistency is optional on the host side, but ARA 2 plug-ins are required to fully
 //! support it.
 //! \br
-//! A crucial point to keep in mind when archiving and unarchiving partial graphs is to honour data
+//! A crucial point to keep in mind when archiving and unarchiving partial graphs is to honor data
 //! dependencies in the overall graph. The opaque state of a persistent object can depend both on its
 //! properties, such as the sample count of an audio source, and on parent objects inside the graph,
 //! such as audio modification state referencing data in the underlying audio source.
-//! The host must honour these dependencies, or else the plug-in may not be able to properly restore
+//! The host must honor these dependencies, or else the plug-in may not be able to properly restore
 //! the archived state, causing some degree of data loss, up to a full reset of the affected object.
 //! ARA 1 style full-document persistency intrinsically complies with this rule and can be trivially
 //! migrated to the ARA 2 calls. For partial archives however, some notable consequences are:
@@ -2842,8 +2842,8 @@ typedef struct ARADocumentControllerInterface
 //! has been edited in either the source or target document.
 //! Depending on what the actual difference in the audio source state is, the plug-in may be able to
 //! adjust the pasted audio modification to the altered audio source state and still retain a valuable
-//! ammount of the original data. Therefore the host is allowed to perform such operations (at the
-//! risk of loosing an unspecified ammount of data), and plug-ins must deal with this situation as
+//! amount of the original data. Therefore the host is allowed to perform such operations (at the
+//! risk of loosing an unspecified amount of data), and plug-ins must deal with this situation as
 //! reasonable as their internal models allow them to and not threat this as an error.
 //@{
     //! Unarchive the internal state of the specified objects.
@@ -2879,7 +2879,7 @@ typedef struct ARADocumentControllerInterface
     //! Result is kARAFalse if the access to the archive reader failed while trying to read the
     //! archive, or if decoding the data failed, kARATrue otherwise. Potential reason for failure
     //! include data corruption due to storage hardware failures, or broken dependencies when
-    //! restoring parial archives as dicsussed above. The plug-in should try to recover as much
+    //! restoring partial archives as discussed above. The plug-in should try to recover as much
     //! state as possible in all cases, and the host should notify the user of such errors.
     //! If a failure happened already while reading the archive, the host is aware of this and can
     //! augment its error message to the user accordingly. If the failure happens inside the plug-in
@@ -2959,7 +2959,7 @@ typedef struct ARADocumentControllerInterface
     //! the host can query which processing algorithm was used and update its UI accordingly.
     //! This is particularly relevant if the host did explicitly request an analysis with a
     //! specific algorithm, but the plug-in was unable to satisfy this request for some reason.
-    //! Similarily, the user may have changed the algorithm through the plug-in's UI.
+    //! Similarly, the user may have changed the algorithm through the plug-in's UI.
     //! Note that until the first analysis has completed (i.e. as long as
     //! isAudioSourceContentAnalysisIncomplete() returns kARATrue), the value returned here may be
     //! an abstract default, not related to the actual audio source content. This will e.g. typically
@@ -3009,7 +3009,7 @@ typedef struct ARADocumentControllerInterface
     //! If not intending to use analysis, the count should be 0 and the array pointer NULL.
     //! The transformationFlags must be a subset of the plug-in's ARAFactory::supportedPlaybackTransformationFlags,
     //! and may be kARAPlaybackTransformationNoChanges if not intending to use transformations.
-    //! The call returns kARATrue if the (potentiall updated) license is sufficient to perform the
+    //! The call returns kARATrue if the (potentially updated) license is sufficient to perform the
     //! requested tasks.
     ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *isLicensedForCapabilities) (ARADocumentControllerRef controllerRef,
                                                                            ARABool runModalActivationDialogIfNeeded,
@@ -3317,7 +3317,7 @@ typedef ARA_32_BIT_ENUM(ARAPlugInInstanceRoleFlags)
 
 
 /***************************************************************************************************/
-//! @defgroup Playback_Renderer_Interface Playback Renderer Interface (added in ARA 2.0)
+//! @defgroup Playback_Renderer_Interface Playback Renderer Interface (Added In ARA 2.0)
 //! See ::kARAPlaybackRendererRole.
 //! \br
 //! Plug-in developers using C++ ARA Library can implement the ARA::PlugIn::PlaybackRendererInterface,
@@ -3368,7 +3368,7 @@ enum ARA_ADDENDUM(2_0_Draft) { kARAPlaybackRendererInterfaceMinSize = ARA_IMPLEM
 
 
 /***************************************************************************************************/
-//! @defgroup Editor_Renderer_Interface Editor Renderer Interface (added in ARA 2.0)
+//! @defgroup Editor_Renderer_Interface Editor Renderer Interface (Added In ARA 2.0)
 //! See ::kARAEditorRendererRole.
 //! \br
 //! Plug-in developers using C++ ARA Library can implement the ARA::PlugIn::EditorRendererInterface,
@@ -3414,8 +3414,8 @@ ARA_ADDENDUM(2_0_Draft) typedef struct ARAEditorRendererInterface
     void (ARA_CALL *addPlaybackRegion) (ARAEditorRendererRef editorRendererRef, ARAPlaybackRegionRef playbackRegionRef);
     void (ARA_CALL *removePlaybackRegion) (ARAEditorRendererRef editorRendererRef, ARAPlaybackRegionRef playbackRegionRef);
 
-    void (ARA_CALL *addRegionSequence) (ARAEditorRendererRef editorRendererRef, ARARegionSequenceRef regionSequencRef);
-    void (ARA_CALL *removeRegionSequence) (ARAEditorRendererRef editorRendererRef, ARARegionSequenceRef regionSequencRef);
+    void (ARA_CALL *addRegionSequence) (ARAEditorRendererRef editorRendererRef, ARARegionSequenceRef regionSequenceRef);
+    void (ARA_CALL *removeRegionSequence) (ARAEditorRendererRef editorRendererRef, ARARegionSequenceRef regionSequenceRef);
 //@}
 } ARAEditorRendererInterface;
 
@@ -3426,7 +3426,7 @@ enum ARA_ADDENDUM(2_0_Draft) { kARAEditorRendererInterfaceMinSize = ARA_IMPLEMEN
 
 
 /***************************************************************************************************/
-//! @defgroup Editor_View_Interface Editor View Interface (added in ARA 2.0)
+//! @defgroup Editor_View_Interface Editor View Interface (Added In ARA 2.0)
 //! See ::kARAEditorViewRole.
 //! \br
 //! Users will often reconfigure the plug-in view through scrolling, zooming, navigating lists of
@@ -3530,7 +3530,7 @@ ARA_ADDENDUM(2_0_Draft) typedef struct ARAEditorViewInterface
     //! Most hosts offer both an object-based selection which typically centers around selected
     //! arrange events (playback regions) and tracks (region sequences) versus a time-range based
     //! selection that is independent of the arrange events but typically also includes track selection.
-    //! Both modes shall be distinguisehd by providing a time range only in the latter case.
+    //! Both modes shall be distinguished by providing a time range only in the latter case.
     //! Some hosts even allow to select multiple time ranges, this should be expressed by sending
     //! their union range across the API.
     //! For an object-based selection, the time range remains NULL, and plug-ins can calculate an
