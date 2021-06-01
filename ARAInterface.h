@@ -41,7 +41,7 @@
 // Supported architectures
 
 #if !(defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86))
-    #if defined(__arm64__) || defined(__arm64e__) || defined(_M_ARM64)
+    #if defined(__arm64__) || defined(__arm64e__) || defined(_M_ARM64) || defined(__aarch64__)
         #if defined(_MSC_VER)
             #pragma message("warning: ARM support is still work-in-progress and subject to change in potentially incompatible ways")
         #else
@@ -101,7 +101,7 @@ extern "C"
     #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
         // This is for historical reason - current MSVC defaults are 8 on x86 and 16 on x64.
         #pragma pack(push, 1)
-    #elif defined(__arm64__) || defined(__arm64e__) || defined(_M_ARM64)
+    #elif defined(__arm64__) || defined(__arm64e__) || defined(_M_ARM64) || defined(__aarch64__)
         // MSVC default for ARM64 is 8, this also fits the standard packing by member size for
         // the vast majority of the structs in the ARA API on 64 bit processors.
         #pragma pack(push, 8)
