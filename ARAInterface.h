@@ -1738,13 +1738,13 @@ typedef struct ARAAudioAccessControllerInterface
     //! In case of failing in this call, the buffers must be filled with silence and the host must
     //! notify the user about the problem in an appropriate way. The plug-in must deal gracefully
     //! with any such I/O errors, both during analysis and rendering.
-    ARABool (ARA_CALL *readAudioSamples) (ARAAudioAccessControllerHostRef controllerHostRef, ARAAudioReaderHostRef readerRef,
+    ARABool (ARA_CALL *readAudioSamples) (ARAAudioAccessControllerHostRef controllerHostRef, ARAAudioReaderHostRef audioReaderHostRef,
                                           ARASamplePosition samplePosition, ARASampleCount samplesPerChannel, void * const buffers[]);
 
     //! Destroy given audio reader created by the host.
     //! The caller must guarantee that the reader is currently not in use in some other thread.
     //! See ARAAudioAccessControllerInterface::createAudioReaderForSource() about the restrictions when to call this.
-    void (ARA_CALL *destroyAudioReader) (ARAAudioAccessControllerHostRef controllerHostRef, ARAAudioReaderHostRef readerRef);
+    void (ARA_CALL *destroyAudioReader) (ARAAudioAccessControllerHostRef controllerHostRef, ARAAudioReaderHostRef audioReaderHostRef);
 //@}
 } ARAAudioAccessControllerInterface;
 
@@ -2440,7 +2440,7 @@ typedef struct ARADocumentControllerInterface
     //! Since version 2_0_Final this call has been superseded by the combination of beginEditing()
     //! and restoreObjectsFromArchive(). This allows for optional filtering, but also simplifies
     //! both host and plug-in implementation.
-    ARA_DEPRECATED(2_0_Final) ARABool (ARA_CALL *beginRestoringDocumentFromArchive) (ARADocumentControllerRef controllerRef, ARAArchiveReaderHostRef readerHostRef);
+    ARA_DEPRECATED(2_0_Final) ARABool (ARA_CALL *beginRestoringDocumentFromArchive) (ARADocumentControllerRef controllerRef, ARAArchiveReaderHostRef archiveReaderHostRef);
 
     //! End an unarchiving session of the document and its associated objects.
     //! \deprecated
@@ -2449,16 +2449,16 @@ typedef struct ARADocumentControllerInterface
     //! both host and plug-in implementation.
     //! \br
     //! When using API generation 1 or older and using this call, the host must pass the same
-    //! readerHostRef as used for beginRestoringDocumentFromArchive().
+    //! archiveReaderHostRef as used for beginRestoringDocumentFromArchive().
     //! This way, plug-ins can choose to evaluate the archive upon beginRestoring() or endRestoring(),
     //! or even upon both calls if needed.
-    ARA_DEPRECATED(2_0_Final) ARABool (ARA_CALL *endRestoringDocumentFromArchive) (ARADocumentControllerRef controllerRef, ARAArchiveReaderHostRef readerHostRef);
+    ARA_DEPRECATED(2_0_Final) ARABool (ARA_CALL *endRestoringDocumentFromArchive) (ARADocumentControllerRef controllerRef, ARAArchiveReaderHostRef archiveReaderHostRef);
 
     //! Create an archive of the internal state of a given document and all its associated objects.
     //! \deprecated
     //! Since version 2_0_Final this call has been superseded by storeObjectsToArchive(),
     //! which allows for optional filtering, but is otherwise identical.
-    ARA_DEPRECATED(2_0_Final) ARABool (ARA_CALL *storeDocumentToArchive) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef writerHostRef);
+    ARA_DEPRECATED(2_0_Final) ARABool (ARA_CALL *storeDocumentToArchive) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef archiveWriterHostRef);
 //@}
 
 //! @name Document Management
@@ -2882,7 +2882,7 @@ typedef struct ARADocumentControllerInterface
     //! e.g. by listing or marking the affected objects.
     //! Note that since versioning is expressed through the ARA factory, the host must deal with
     //! potential versioning conflicts before making this call, and provide proper UI too.
-    ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *restoreObjectsFromArchive) (ARADocumentControllerRef controllerRef, ARAArchiveReaderHostRef readerHostRef,
+    ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *restoreObjectsFromArchive) (ARADocumentControllerRef controllerRef, ARAArchiveReaderHostRef archiveReaderHostRef,
                                                                            const ARARestoreObjectsFilter * filter);
 
     //! Create a partial archive of the internal state of the specified objects.
@@ -2898,7 +2898,7 @@ typedef struct ARADocumentControllerInterface
     //! Note that for creating ARA audio file chunk archives, storeAudioSourceToAudioFileChunk()
     //! must be used instead, so that the plug-in can pick the correct encoding and return the
     //! corresponding (compatible) document archive ID.
-    ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *storeObjectsToArchive) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef writerHostRef,
+    ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *storeObjectsToArchive) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef archiveWriterHostRef,
                                                                        const ARAStoreObjectsFilter * filter);
 //@}
 
@@ -3030,7 +3030,7 @@ typedef struct ARADocumentControllerInterface
     //! archive, kARATrue otherwise.
     //! The host is responsible for alerting the user about archive write errors,
     //! see ARAArchivingControllerInterface::writeBytesToArchive().
-    ARA_DRAFT ARABool (ARA_CALL *storeAudioSourceToAudioFileChunk) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef writerHostRef,
+    ARA_DRAFT ARABool (ARA_CALL *storeAudioSourceToAudioFileChunk) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef archiveWriterHostRef,
                                                                     ARAAudioSourceRef audioSourceRef, ARAPersistentID * documentArchiveID, ARABool * openAutomatically);
 //@}
 } ARADocumentControllerInterface;
