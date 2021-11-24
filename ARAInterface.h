@@ -489,7 +489,7 @@ typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
 //! The ARA library C++ dispatchers implement a similar feature via templates,
 //! see ARA::SizedStruct<>.
 #if defined(__cplusplus)
-    #define ARA_IMPLEMENTED_STRUCT_SIZE(StructType, memberName) (offsetof(ARA::StructType, memberName) + sizeof((static_cast<ARA::StructType *> (nullptr))->memberName))
+    #define ARA_IMPLEMENTED_STRUCT_SIZE(StructType, memberName) (offsetof(ARA::StructType, memberName) + sizeof(static_cast<ARA::StructType *> (nullptr)->memberName))
 #else
     #define ARA_IMPLEMENTED_STRUCT_SIZE(StructType, memberName) (offsetof(StructType, memberName) + sizeof(((StructType *)NULL)->memberName))
 #endif
@@ -2333,7 +2333,7 @@ ARA_ADDENDUM(2_0_Final) typedef struct ARAProcessingAlgorithmProperties
 } ARAProcessingAlgorithmProperties;
 
 // Convenience constant for easy struct validation.
-enum ARA_ADDENDUM(2_0_Final) { kARAProcessingAlgorithmMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAProcessingAlgorithmProperties, name) };
+enum ARA_ADDENDUM(2_0_Final) { kARAProcessingAlgorithmPropertiesMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAProcessingAlgorithmProperties, name) };
 
 //! @}
 
