@@ -2895,8 +2895,9 @@ typedef struct ARADocumentControllerInterface
     //! archive, kARATrue otherwise.
     //! The host is responsible for alerting the user about archive write errors,
     //! see ARAArchivingControllerInterface::writeBytesToArchive().
-    //! Note that this call is not suitable for creating ARA audio file chunk archives, due to the
-    //! very different optimization criteria that apply in that context, see \ref ARAAudioFileChunks.
+    //! Note that for creating ARA audio file chunk archives, storeAudioSourceToAudioFileChunk()
+    //! must be used instead, so that the plug-in can pick the correct encoding and return the
+    //! corresponding (compatible) document archive ID.
     ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *storeObjectsToArchive) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef writerHostRef,
                                                                        const ARAStoreObjectsFilter * filter);
 //@}
@@ -3010,6 +3011,27 @@ typedef struct ARADocumentControllerInterface
                                                                            ARABool runModalActivationDialogIfNeeded,
                                                                            ARASize contentTypesCount, const ARAContentType contentTypes[],
                                                                            ARAPlaybackTransformationFlags transformationFlags);
+//@}
+
+//! @name Document Persistency (extended in ARA 2.0)
+//@{
+    //! Create an archive of the internal state of the specified audio source suitable to be
+    //! embedded into the underlying audio file as ARA audio file chunks, see @ref ARAAudioFileChunks.
+    //! Hosts must check ARAFactory::supportsStoringAudioFileChunks before enabling users to store
+    //! audio file chunks for the given plug-in.
+    //! Archives may only be created from documents that are not being currently edited.
+    //! \br
+    //! This call differs from using storeObjectsToArchive() with an ARAStoreObjectsFilter in that
+    //! the plug-in may choose a different internal encoding more suitable for this use case,
+    //! indicated by returning a \p documentArchiveID that is likely one of the
+    //! ARAFactory::compatibleDocumentArchiveIDs rather than the ARAFactory::documentArchiveID.
+    //! The plug-in also returns whether openAutomatically should be set in the audio file chunk.
+    //! Result is kARAFalse if the access to the archive writer failed while trying to write the
+    //! archive, kARATrue otherwise.
+    //! The host is responsible for alerting the user about archive write errors,
+    //! see ARAArchivingControllerInterface::writeBytesToArchive().
+    ARA_DRAFT ARABool (ARA_CALL *storeAudioSourceToAudioFileChunk) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef writerHostRef,
+                                                                    ARAAudioSourceRef audioSourceRef, ARAPersistentID * documentArchiveID, ARABool * openAutomatically);
 //@}
 } ARADocumentControllerInterface;
 
@@ -3192,6 +3214,13 @@ enum { kARAInterfaceConfigurationMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAInterf
     //! Set of transformations that the plug-in supports when configuring playback regions.
     //! These flags allow the host to determine whether e.g. the plug-in can be used as time-stretch engine.
     ARAPlaybackTransformationFlags supportedPlaybackTransformationFlags;
+
+    //! Flag whether the plug-in supports exporting ARA audio file chunks via
+    //! ARADocumentControllerInterface::storeAudioSourceToAudioFileChunk().
+    //! Note that reading such chunks is unaffected by this flag - as long as the documentArchiveID
+    //! in the chunk is compatible, the plug-in must be able to read the data via
+    //! ARADocumentControllerInterface::restoreObjectsFromArchive().
+    ARA_DRAFT ARABool supportsStoringAudioFileChunks;
 //@}
 } /*ARAFactory*/;
 

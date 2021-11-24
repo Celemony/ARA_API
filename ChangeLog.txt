@@ -9,11 +9,11 @@ Proposed Features which have been postponed to a later subrelease:
 
 Proposed Features currently scheduled targeted for this subrelease:
 - Audio Unit version 3 support (App Extension)
-- support for ARA audio file chunk authoring directly in the host
 - waveform envelope overview (previous draft had been temporarily removed until after ARA 2.0 release)
 
 ARA SDK 2.1 draft 1 (aka 2.0.1) (2021/??/??)
 - finalized ARM support for Apple Silicon
+- initial draft of ARA audio file chunk authoring directly in the host
 
 
 === ARA SDK 2.0 release (aka 2.0.001) (2021/05/03) ===
