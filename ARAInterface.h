@@ -38,30 +38,6 @@
 
 
 /***************************************************************************************************/
-// Supported architectures
-
-#if !(defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86))
-    #if defined(__arm64__) || defined(__arm64e__) || defined(_M_ARM64)
-        #if defined(_MSC_VER)
-            #pragma message("warning: ARM support is still work-in-progress and subject to change in potentially incompatible ways")
-        #else
-            #if defined(__GNUC__)
-                _Pragma ("GCC diagnostic push")
-                _Pragma ("GCC diagnostic ignored \"-Wpedantic\"")
-            #endif
-            #warning "ARM support is still work-in-progress and subject to change in potentially incompatible ways"
-            #if defined(__GNUC__)
-                _Pragma ("GCC diagnostic pop")
-            #endif
-        #endif
-    #else
-        #error "unsupported architecture"
-    #endif
-#endif
-
-
-
-/***************************************************************************************************/
 // C99 standard includes for the basic data types
 
 #include <stddef.h>
@@ -76,8 +52,10 @@
     #define ARA_DOXYGEN_BUILD 0
 #endif
 
+
 /***************************************************************************************************/
-// Various configurations/decorations to ensure binary compatibility.
+// Various configurations/decorations to ensure binary compatibility across compilers:
+// struct packing and alignment, calling conventions, etc.
 
 #if defined(__cplusplus) && !(ARA_DOXYGEN_BUILD)
 namespace ARA
@@ -86,7 +64,21 @@ extern "C"
 {
 #endif
 
-// Ensure binary compatibility across compilers by explicitly defining binary data layout.
+
+// define CPU architecture
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
+    #define ARA_CPU_X86 1
+    #define ARA_CPU_ARM 0
+#elif defined(__aarch64__) || defined(__arm64__) || defined(__arm64e__) || defined(_M_ARM64)
+    #define ARA_CPU_X86 0
+    #define ARA_CPU_ARM 1
+//#elif defined(__ppc__) || defined(__ppc64__)
+//  #define ARA_CPU_PPC 1
+#else
+    #error "unsupported CPU architecture"
+#endif
+
+
 // To prevent any alignment/padding settings from the surrounding code to modify the ARA data layout,
 // we need to explicitly define the layout here. Ideally, we would stick with the C standard
 // alignment/padding (struct alignment defined by largest member, each member aligned by its size),
@@ -94,25 +86,25 @@ extern "C"
 // As a workaround, ARA started using 1-byte packing. However, this causes some members in some of
 // the ARA structs to be not naturally aligned on 64 bit systems. But moreover, this also affects
 // the possible alignment of all ARA structs in some compilers. Thus developers that directly use
-// the C API must carefully align any data that they pass across the API boundary in order to avoid
+// the C API must carefully align any struct that they pass across the API boundary in order to avoid
 // performance penalties. When using the ARA library C++ dispatch code, the SizedStruct<> template
 // which is used as central low-level wrapper for any data crossing the API takes care of this issue.
 #if defined(_MSC_VER) || defined(__GNUC__)
-    #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-        // This is for historical reason - current MSVC defaults are 8 on x86 and 16 on x64.
+    #if ARA_CPU_X86
+        // This is for historical reason only - current MSVC defaults are 8 on x86 and 16 on x64.
         #pragma pack(push, 1)
-    #elif defined(__arm64__) || defined(__arm64e__) || defined(_M_ARM64)
+    #elif ARA_CPU_ARM
         // MSVC default for ARM64 is 8, this also fits the standard packing by member size for
         // the vast majority of the structs in the ARA API on 64 bit processors.
         #pragma pack(push, 8)
     #else
-        #error "struct packing and alignment not yet defined for this processor"
+        #error "struct packing and alignment not yet defined for this architecture"
     #endif
 #else
     #error "struct packing and alignment not yet defined for this compiler"
 #endif
 
-// Override any custom calling conventions, stick with the C standard calling convention.
+// Override any custom calling conventions, enforce the C standard calling convention.
 #if defined(_MSC_VER)
     #define ARA_CALL __cdecl
 #else
@@ -449,13 +441,16 @@ typedef const char * ARAPersistentID;
 //! @{
 typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
 {
+#if !ARA_CPU_ARM
     //! private API between Studio One and Melodyne
     kARAAPIGeneration_1_0_Draft = 1,
     //! supported by Studio One, Cakewalk/SONAR, Samplitude Pro, Mixcraft, Waveform/Tracktion, Melodyne, VocAlign, AutoTune
     kARAAPIGeneration_1_0_Final = 2,
     //! supported by Studio One, Logic Pro, Cubase/Nuendo, Cakewalk, REAPER, Melodyne, ReVoice Pro, VocAlign, Auto-Align, SpectraLayers
     kARAAPIGeneration_2_0_Draft = 3,
+#endif
     //! most developers supporting kARAAPIGeneration_2_0_Draft are already working on updating to kARAAPIGeneration_2_0_Final
+    //! (this is also required for ARM builds)
     kARAAPIGeneration_2_0_Final = 4,
     //! reserved for future development
     kARAAPIGeneration_2_X_Draft = 5
