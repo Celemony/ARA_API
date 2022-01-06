@@ -1,19 +1,13 @@
-This is a development build of the ARA API 2.1.
-=== PRELIMINARY - DO NOT USE FOR SHIPPING PRODUCTS! ===
-
-
 Proposed Features which have been postponed to a later subrelease:
+- Audio Unit version 3 support (App Extension)
+- waveform envelope overview (previous draft had been temporarily removed until after ARA 2.0 release)
 - integration of plug-in undo history integration into the host
 - support for dynamic tuning such as Hermode (previous draft temporarily removed until after ARA 2.0 release)
 - support for automatic adaption of tuning and harmonic context (previous draft temporarily removed until after ARA 2.0 release)
 
-Proposed Features currently scheduled targeted for this subrelease:
-- Audio Unit version 3 support (App Extension)
-- waveform envelope overview (previous draft had been temporarily removed until after ARA 2.0 release)
-
-ARA SDK 2.1 draft 1 (aka 2.0.1) (2021/??/??)
+=== ARA SDK 2.1 release (aka 2.1.001) (2022/01/06) ===
 - finalized ARM support for Apple Silicon
-- initial draft of ARA audio file chunk authoring directly in the host
+- enable ARA audio file chunk authoring directly in the host
 
 
 === ARA SDK 2.0 release (aka 2.0.001) (2021/05/03) ===

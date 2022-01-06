@@ -3030,8 +3030,8 @@ typedef struct ARADocumentControllerInterface
     //! archive, kARATrue otherwise.
     //! The host is responsible for alerting the user about archive write errors,
     //! see ARAArchivingControllerInterface::writeBytesToArchive().
-    ARA_DRAFT ARABool (ARA_CALL *storeAudioSourceToAudioFileChunk) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef archiveWriterHostRef,
-                                                                    ARAAudioSourceRef audioSourceRef, ARAPersistentID * documentArchiveID, ARABool * openAutomatically);
+    ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *storeAudioSourceToAudioFileChunk) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef archiveWriterHostRef,
+                                                                                  ARAAudioSourceRef audioSourceRef, ARAPersistentID * documentArchiveID, ARABool * openAutomatically);
 //@}
 } ARADocumentControllerInterface;
 
