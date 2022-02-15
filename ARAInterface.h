@@ -3220,7 +3220,7 @@ enum { kARAInterfaceConfigurationMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAInterf
     //! Note that reading such chunks is unaffected by this flag - as long as the documentArchiveID
     //! in the chunk is compatible, the plug-in must be able to read the data via
     //! ARADocumentControllerInterface::restoreObjectsFromArchive().
-    ARA_DRAFT ARABool supportsStoringAudioFileChunks;
+    ARA_ADDENDUM(2_0_Final) ARABool supportsStoringAudioFileChunks;
 //@}
 } /*ARAFactory*/;
 
