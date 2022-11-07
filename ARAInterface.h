@@ -321,8 +321,29 @@ typedef double ARAQuarterDuration;
 //! Specified in Hz.
 typedef double ARASampleRate;
 
-//! In the current version of ARA, no spatial positioning of the channels is defined.
+//! Count of discrete channels of an audio signal.
+//! The spacial positioning of the channels may be provided via ARAChannelArrangementDataType.
 typedef ARAInt32 ARAChannelCount;
+
+//! To avoid defining yet another abstraction of spacial layout information for the individual
+//! channels of an audio signal, ARA directly uses the respective Companion API's model of
+//! spacial arrangement. Since different Companion APIs are available, this enum specifies which
+//! abstraction is used.
+ARA_DRAFT typedef ARA_32_BIT_ENUM(ARAChannelArrangementDataType)
+{
+    //! Used to indicate the feature is not supported/used (e.g. mono or stereo).
+    kARAChannelArrangementUndefined = 0,
+    //! For VST3, the channel arrangement is specified as Steinberg::Vst::SpeakerArrangement.
+    kARAChannelArrangementVST3SpeakerArrangement = 1,
+    //! For Audio Units, the channel arrangement is specified as the CoreAudio
+    //! struct AudioChannelLayout. Note that according to Apple's documentation,
+    //! "the kAudioChannelLayoutTag_UseChannelBitmap field is NOT used within the context
+    //! of the AudioUnit." If possible, kAudioChannelLayoutTag_UseChannelDescriptions
+    //! should also be avoided to ease parsing the struct.
+    kARAChannelArrangementCoreAudioChannelLayout = 2,
+    //! For AAX, the channel arrangement is specified as AAX_EStemFormat.
+    kARAChannelArrangementAAXStemFormat = 3
+};
 
 //! @}
 
@@ -821,6 +842,24 @@ typedef struct ARAAudioSourceProperties
     //! read either 32 or 64 bit samples on this flag,
     //! see ARAAudioAccessControllerInterface::createAudioReaderForSource().
     ARABool merits64BitSamples;
+
+    //! Type information of the data the opaque #channelArrangement actually points to.
+    //! Host shall use the data type associated with the Companion API that was used to create
+    //! the respective document controller.
+    ARA_DRAFT ARAChannelArrangementDataType channelArrangementDataType;
+
+    //! Spacial arrangement information: defines which channel carries the signal from which direction.
+    //! The data type that this pointer references is defined by #channelArrangementDataType,
+    //! see ARAChannelArrangementDataType.
+    //! \br
+    //! If #channelCount not larger than 2 (i.e. mono or stereo), this information may omitted by
+    //! setting #channelArrangementDataType to kARAChannelArrangementUndefined and #channelArrangement
+    //! to NULL. The behavior is then the same as in hosts that do not support surround for ARA:
+    //! for stereo, channel 0 is the left and channel 1 the right speaker.
+    //! \br
+    //! To determine which channel arrangements are supported by the plug-in, the host will use the
+    //! Companion API and read the valid render input formats.
+    ARA_DRAFT const void * channelArrangement;
 } ARAAudioSourceProperties;
 
 // Convenience constant for easy struct validation.
@@ -1179,7 +1218,7 @@ typedef ARA_32_BIT_ENUM(ARAContentType)
 //! that intersect with the given time range. Reader implementations should strive to respect this
 //! request, but focus on overall performance - the events actually returned may exceed the specified
 //! range by any amount, and calling code must evaluate the returned event positions/event durations.
-//!
+//! \br
 //! Note that when calls accept a pointer to a content time range, that pointer is only valid for
 //! the duration of the call - the data must be evaluated/copied inside the call, and the pointer
 //! must not be stored anywhere.

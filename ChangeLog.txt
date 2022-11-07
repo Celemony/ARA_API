@@ -11,11 +11,10 @@ Proposed Features currently scheduled targeted for this subrelease:
 - support for Audio Unit out-of-process operation (currently enforced by Logic when running on Apple Silicon)
 - Audio Unit version 3 support (App Extension)
 - waveform envelope overview (previous draft had been temporarily removed until after ARA 2.0 release)
-- surround formats for audio sources
 
 
 Changes since previous releases:
-- no changes yet
+- initial draft of surround support for audio sources
 
 
 === ARA SDK 2.1 release (aka 2.1.001) (2022/01/06) ===
