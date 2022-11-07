@@ -14,7 +14,7 @@ Proposed Features currently scheduled targeted for this subrelease:
 
 
 Changes since previous releases:
-- initial draft of surround support for audio sources
+- added surround support for audio sources
 - initial draft of tracking whether an audio modification actually modifies the underlying audio source
 
 

@@ -329,7 +329,7 @@ typedef ARAInt32 ARAChannelCount;
 //! channels of an audio signal, ARA directly uses the respective Companion API's model of
 //! spacial arrangement. Since different Companion APIs are available, this enum specifies which
 //! abstraction is used.
-ARA_DRAFT typedef ARA_32_BIT_ENUM(ARAChannelArrangementDataType)
+typedef ARA_32_BIT_ENUM(ARAChannelArrangementDataType)
 {
     //! Used to indicate the feature is not supported/used (e.g. mono or stereo).
     kARAChannelArrangementUndefined = 0,
@@ -846,7 +846,7 @@ typedef struct ARAAudioSourceProperties
     //! Type information of the data the opaque #channelArrangement actually points to.
     //! Host shall use the data type associated with the Companion API that was used to create
     //! the respective document controller.
-    ARA_DRAFT ARAChannelArrangementDataType channelArrangementDataType;
+    ARA_ADDENDUM(2_0_Final) ARAChannelArrangementDataType channelArrangementDataType;
 
     //! Spacial arrangement information: defines which channel carries the signal from which direction.
     //! The data type that this pointer references is defined by #channelArrangementDataType,
@@ -859,7 +859,7 @@ typedef struct ARAAudioSourceProperties
     //! \br
     //! To determine which channel arrangements are supported by the plug-in, the host will use the
     //! Companion API and read the valid render input formats.
-    ARA_DRAFT const void * channelArrangement;
+    ARA_ADDENDUM(2_0_Final) const void * channelArrangement;
 } ARAAudioSourceProperties;
 
 // Convenience constant for easy struct validation.
