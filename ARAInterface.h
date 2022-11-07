@@ -3102,7 +3102,7 @@ typedef struct ARADocumentControllerInterface
     //! moves them back to the original location, this might not cause this flag to turn back on.
     //! If however the user invokes undo, or some explicit reset command instead of the manual
     //! adjustment, then the plug-in should maintain this state properly.
-    ARA_DRAFT ARABool (ARA_CALL *isAudioModificationPreservingAudioSourceSignal) (ARADocumentControllerRef controllerRef, ARAAudioModificationRef audioModificationRef);
+    ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *isAudioModificationPreservingAudioSourceSignal) (ARADocumentControllerRef controllerRef, ARAAudioModificationRef audioModificationRef);
 //@}
 } ARADocumentControllerInterface;
 
