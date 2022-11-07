@@ -3072,6 +3072,30 @@ typedef struct ARADocumentControllerInterface
     ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *storeAudioSourceToAudioFileChunk) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef archiveWriterHostRef,
                                                                                   ARAAudioSourceRef audioSourceRef, ARAPersistentID * documentArchiveID, ARABool * openAutomatically);
 //@}
+//! @name Audio Modification Management
+//@{
+    //! Some hosts such as Pro Tools provide indicators whether a given plug-in's current
+    //! settings cause it to alter the sound of the original audio source, or preserve it so that
+    //! bypassing/removing the plug-in would not change the perceived audible result (note that
+    //! actual rendering involves using a playback region, which still may apply time-stretching
+    //! or pitch-shifting to the audio modification's potentially unaltered output).
+    //! \br
+    //! Changes to this state are tracked via ARAModelUpdateControllerInterface::notifyAudioModificationContentChanged()
+    //! with ::kARAContentUpdateSignalScopeRemainsUnchanged == false. Note that it is possible to
+    //! perform other edits such as reassigning the chords associated with the audio modification
+    //! which would not affect this state.
+    //! \br
+    //! It is valid for plug-in implementations to deliver false negatives here to reasonably
+    //! limit the cost of maintaining the state. For example, if the plug-in does some
+    //! threshold-based processing, but the signal happens to never actually reach the threshold,
+    //! the plug-in still may report to alter the sound.
+    //! Another example is pitch&time editing in a Melodyne-like plug-in: if notes are moved to a
+    //! different pitch or time position so that this flag is cleared, but later the user manually
+    //! moves them back to the original location, this might not cause this flag to turn back on.
+    //! If however the user invokes undo, or some explicit reset command instead of the manual
+    //! adjustment, then the plug-in should maintain this state properly.
+    ARA_DRAFT ARABool (ARA_CALL *isAudioModificationPreservingAudioSourceSignal) (ARADocumentControllerRef controllerRef, ARAAudioModificationRef audioModificationRef);
+//@}
 } ARADocumentControllerInterface;
 
 // Convenience constant for easy struct validation.

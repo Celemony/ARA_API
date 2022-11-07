@@ -15,6 +15,7 @@ Proposed Features currently scheduled targeted for this subrelease:
 
 Changes since previous releases:
 - initial draft of surround support for audio sources
+- initial draft of tracking whether an audio modification actually modifies the underlying audio source
 
 
 === ARA SDK 2.1 release (aka 2.1.001) (2022/01/06) ===
