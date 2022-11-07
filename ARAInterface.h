@@ -2580,14 +2580,17 @@ typedef struct ARADocumentControllerInterface
 
     //! Deactivate the given audio source because it has become part of the undo history
     //! and is no longer used actively.
-    //! The plug-in will cancel any pending analysis for this audio source and may free some memory
+    //! The plug-in will cancel any pending analysis for this audio source and may free memory
     //! that is only needed when the audio source can be edited or rendered.
-    //! Before deactivating an audio source, the host must deactivate all connected audio modifications
-    //! first, and the opposite order is required when re-activating upon redo.
+    //! Before deactivating an audio source, the host must deactivate all associated audio
+    //! modifications, and the opposite order is required when re-activating upon redo.
     //! When deactivated, updating the properties or content of the audio source or reading its
     //! content is no longer valid.
     //! Like properties, deactivation is not necessarily persistent in the plug-in, so the host must
     //! call this explicitly when restoring deactivated audio sources.
+    //! Note that with the introduction of partial persistency with ARA 2.0, hosts likely will prefer
+    //! to simply create partial archives of deleted audio sources and manage these in their undo
+    //! history rather than utilizing this call.
     void (ARA_CALL *deactivateAudioSourceForUndoHistory) (ARADocumentControllerRef controllerRef,
                                                           ARAAudioSourceRef audioSourceRef, ARABool deactivate);
 
@@ -2622,10 +2625,15 @@ typedef struct ARADocumentControllerInterface
     //! and is no longer used actively.
     //! The plug-in may free some memory that is only needed when the audio modification can be
     //! edited or rendered.
+    //! Before deactivating an audio modification, the host must destroy all associated playback
+    //! regions, and the opposite order is required when re-activating upon redo.
     //! When deactivated, updating the properties of the audio modification or reading its
     //! content is no longer valid.
     //! Like properties, deactivation is not necessarily persistent in the plug-in, so the host must
     //! call this explicitly when restoring deactivated audio modifications.
+    //! Note that with the introduction of partial persistency with ARA 2.0, hosts likely will prefer
+    //! to simply create partial archives of deleted audio modifications and manage these in their undo
+    //! history rather than utilizing this call.
     void (ARA_CALL *deactivateAudioModificationForUndoHistory) (ARADocumentControllerRef controllerRef,
                                                                 ARAAudioModificationRef audioModificationRef, ARABool deactivate);
 
