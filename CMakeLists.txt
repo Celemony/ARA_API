@@ -47,6 +47,9 @@ if(APPLE)
     list(INSERT ARA_API_Files 2
         "${CMAKE_CURRENT_SOURCE_DIR}/ARAAudioUnit.h"
     )
+    list(INSERT ARA_API_Files 3
+        "${CMAKE_CURRENT_SOURCE_DIR}/ARAAudioUnit_v3.h"
+    )
 endif()
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
