@@ -70,7 +70,6 @@ function(ara_disable_unwanted_warnings target)
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         target_compile_options(${target}
             PRIVATE
-                -Wno-unused-parameter
                 -Wno-gnu-zero-variadic-macro-arguments
                 -Wno-vla-extension
                 -Wno-global-constructors
@@ -82,7 +81,6 @@ function(ara_disable_unwanted_warnings target)
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         target_compile_options(${target}
             PRIVATE
-                -Wno-unused-parameter
                 -Wno-variadic-macros
                 -Wno-vla
                 $<$<COMPILE_LANGUAGE:C>:-Wno-missing-prototypes>
