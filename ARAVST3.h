@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //! \file       ARAVST3.h
-//!             Celemony extension to the Steinberg VST3.7 SDK to integrate ARA into VST3 plug-ins
+//!             Celemony extension to the Steinberg VST3 SDK to integrate ARA into VST3 plug-ins
 //! \project    ARA API Specification
 //! \copyright  Copyright (c) 2012-2022, Celemony Software GmbH, All Rights Reserved.
 //!             Developed in cooperation with PreSonus Software Ltd.
@@ -21,7 +21,7 @@
 #define ARAVST3_h
 
 /***************************************************************************************************/
-// This is a Celemony extension to the Steinberg VST3.7.1 SDK to integrate ARA into VST3 plug-ins
+// This is a Celemony extension to the Steinberg VST3 SDK to integrate ARA into VST3 plug-ins
 // VST is a trademark of Steinberg Media Technologies GmbH
 /***************************************************************************************************/
 
