@@ -1,7 +1,7 @@
 # ======================
 # CMake helper functions related to ARA_API
 #
-# Copyright (c) 2020-2022, Celemony Software GmbH, All Rights Reserved.
+# Copyright (c) 2020-2023, Celemony Software GmbH, All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

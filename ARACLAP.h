@@ -2,7 +2,7 @@
 //! \file       ARACLAP.h
 //!             Celemony extension to the CLAP SDK to integrate ARA into CLAP plug-ins
 //! \project    ARA API Specification
-//! \copyright  Copyright (c) 2022-2022, Celemony Software GmbH, All Rights Reserved.
+//! \copyright  Copyright (c) 2022-2023, Celemony Software GmbH, All Rights Reserved.
 //!             Developed in cooperation with Timo Kaluza (defiantnerd)
 //! \license    Licensed under the Apache License, Version 2.0 (the "License");
 //!             you may not use this file except in compliance with the License.

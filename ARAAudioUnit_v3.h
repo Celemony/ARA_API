@@ -2,7 +2,7 @@
 //! \file       ARAAudioUnit_v3.h
 //!             integrates ARA into Audio Unit v3 App Extension plug-ins
 //! \project    ARA API Specification
-//! \copyright  Copyright (c) 2021-2022, Celemony Software GmbH, All Rights Reserved.
+//! \copyright  Copyright (c) 2021-2023, Celemony Software GmbH, All Rights Reserved.
 //!             Developed in cooperation with PreSonus Software Ltd.
 //! \license    Licensed under the Apache License, Version 2.0 (the "License");
 //!             you may not use this file except in compliance with the License.
