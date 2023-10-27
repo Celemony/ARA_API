@@ -36,6 +36,7 @@ option(ARA_ENABLE_DEPRECATION_WARNINGS "Enable warnings when using deprecated AR
 set(ARA_API_Files
     "${CMAKE_CURRENT_SOURCE_DIR}/ARAInterface.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/ARAAudioFileChunks.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ARACLAP.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/ARAVST3.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/ARA_API.pdf"
     "${CMAKE_CURRENT_SOURCE_DIR}/ChangeLog.txt"

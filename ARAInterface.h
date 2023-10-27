@@ -349,14 +349,19 @@ typedef ARA_32_BIT_ENUM(ARAChannelArrangementDataType)
     kARAChannelArrangementUndefined = 0,
     //! For VST3, the channel arrangement is specified as Steinberg::Vst::SpeakerArrangement.
     kARAChannelArrangementVST3SpeakerArrangement = 1,
-    //! For Audio Units, the channel arrangement is specified as the CoreAudio
+    //! For Audio Units, the channel arrangement is specified as the Core Audio
     //! struct AudioChannelLayout. Note that according to Apple's documentation,
     //! "the kAudioChannelLayoutTag_UseChannelBitmap field is NOT used within the context
     //! of the AudioUnit." If possible, kAudioChannelLayoutTag_UseChannelDescriptions
     //! should also be avoided to ease parsing the struct.
     kARAChannelArrangementCoreAudioChannelLayout = 2,
     //! For AAX, the channel arrangement is specified as AAX_EStemFormat.
-    kARAChannelArrangementAAXStemFormat = 3
+    kARAChannelArrangementAAXStemFormat = 3,
+    //! For CLAP surround, the channel arrangement is specified as a channel map,
+    //! i.e. an array of uint8_t with ARAAudioSourceProperties.channelCount entries.
+    ARA_DRAFT kARAChannelArrangementCLAPChannelMap = 4,
+    //! For CLAP ambisonic, the channel arrangement is specified as clap_ambisonic_info.
+    ARA_DRAFT kARAChannelArrangementCLAPAmbisonicInfo = 5
 };
 
 //! @}

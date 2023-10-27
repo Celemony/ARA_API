@@ -29,6 +29,7 @@ function(ara_disable_unwanted_warnings target)
         target_compile_options(${target}
             PRIVATE
                 /wd4351     # elements of array 'array' will be default initialized (deprecated)
+                /wd4464     # relative include path contains '..'
                 /wd4503     # decorated name length exceeded
                 /wd26812    # prefer 'enum class' over 'enum'
         )
