@@ -16,7 +16,7 @@
 # limitations under the License.
 # ======================
 
-cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/ARA_API_Helpers.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/ARA_Version.cmake")
@@ -52,16 +52,7 @@ if(APPLE)
     )
 endif()
 
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
-    add_library(ARA_API INTERFACE ${ARA_API_Files})
-else()
-    # older CMake interface targets cannot have non-interface sources or properties,
-    # so we need to use an empty object target instead
-    add_library(ARA_API OBJECT ${ARA_API_Files})
-    set_target_properties(ARA_API PROPERTIES
-        LINKER_LANGUAGE NONE
-    )
-endif()
+add_library(ARA_API INTERFACE ${ARA_API_Files})
 
 target_compile_features(ARA_API
     INTERFACE
@@ -69,7 +60,18 @@ target_compile_features(ARA_API
         cxx_std_11
 )
 
-ara_private_configure_ARA_API_interface_settings(ARA_API INTERFACE)
+target_include_directories(ARA_API
+    INTERFACE
+        "${CMAKE_CURRENT_LIST_DIR}/.."
+)
+
+# \todo test this - do we always see the correct value for ARA_ENABLE_DEPRECATION_WARNINGS?
+if(ARA_ENABLE_DEPRECATION_WARNINGS)
+    target_compile_definitions(ARA_API
+        INTERFACE
+            ARA_ENABLE_DEPRECATION_WARNINGS=1
+    )
+endif()
 
 set_target_properties(ARA_API PROPERTIES
     XCODE_GENERATE_SCHEME OFF

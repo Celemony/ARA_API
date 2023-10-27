@@ -15,6 +15,7 @@ Proposed Features currently scheduled targeted for this subrelease:
 
 Changes since previous releases:
 - initial draft of Audio Unit version 3 support (App Extension, incl. IPC when not loaded in-process)
+- required minimum CMake version increased from 3.4 to 3.19 (same as VST3)
 
 
 === ARA SDK 2.2 release (aka 2.2.001) (2022/11/07) ===
