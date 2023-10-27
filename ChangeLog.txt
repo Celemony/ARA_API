@@ -10,14 +10,11 @@ Proposed Features which have been postponed to a later subrelease:
 
 Proposed Features currently scheduled targeted for this subrelease:
 - full AAX Companion API integration
-- support for Audio Unit out-of-process operation (currently enforced by Logic when running on Apple Silicon)
 - waveform envelope overview (previous draft had been temporarily removed until after ARA 2.0 release)
 
 
 Changes since previous releases:
-- initial draft of Audio Unit version 3 support (App Extension)
-  This draft currently requires kAudioComponentFlag_CanLoadInProcess to be used,
-  loading out-of-process will be supported in a later version.
+- initial draft of Audio Unit version 3 support (App Extension, incl. IPC when not loaded in-process)
 
 
 === ARA SDK 2.2 release (aka 2.2.001) (2022/11/07) ===

@@ -22,7 +22,7 @@
 
 #include "ARAInterface.h"
 
-#include "MacTypes.h"
+#import <AudioUnit/AUAudioUnit.h>
 
 #if defined(__GNUC__)
     _Pragma ("GCC diagnostic push")
@@ -77,8 +77,10 @@
 //! \endcode
 #define /*ARA_DRAFT*/ kARAAudioComponentTag "ARA"
 
+
 //! Protocol to be implemented by ARA-compatible subclasses AUAudioUnit.
-/*ARA_DRAFT*/ @protocol ARAAudioUnit
+//! This protocol may or may not be replaced with the AUMessageChannel based communication defined below.
+ARA_DRAFT @protocol ARAAudioUnit <NSObject>
 
 @required
 #if defined(__cplusplus)
@@ -112,6 +114,19 @@
 #endif
 
 @end
+
+
+//! UTIs for ARA message protocols used for [AUAudioUnit messageChannelFor:] (added in macOS 13)
+//! The message channel for ARA_AUDIOUNIT_DOCUMENTCONTROLLER_CUSTOM_MESSAGES_UTI should only be
+//! obtained and configured once, it will also be used for all document controller communications
+//! based on the factories.
+//! The message channel for ARA_AUDIOUNIT_PLUGINEXTENSION_CUSTOM_MESSAGES_UTI on the other hand
+//! should be managed per ARA-enabled Audio Unit plug-in instance.
+//! This API may eventually replace the above ARAAudioUnit <NSObject> draft.
+//@{
+#define ARA_AUDIOUNIT_FACTORY_CUSTOM_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.factory"
+#define ARA_AUDIOUNIT_PLUGINEXTENSION_CUSTOM_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.pluginextension"
+//@}
 
 
 //! @}
