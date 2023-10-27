@@ -140,6 +140,8 @@ extern "C"
 //! warnings in the most common compilers, for inspecting deprecated API usage in a given project.
 //! These warnings are disabled by default in order to not interfere with code that supports older APIs.
 #define ARA_DEPRECATED(generation)
+#define ARA_DISABLE_DOCUMENTATION_DEPRECATED_WARNINGS_BEGIN
+#define ARA_DISABLE_DOCUMENTATION_DEPRECATED_WARNINGS_END
 
 #if defined(ARA_ENABLE_DEPRECATION_WARNINGS) && (ARA_ENABLE_DEPRECATION_WARNINGS)
     #if !defined(ARA_WARN_DEPRECATED)
@@ -147,7 +149,19 @@ extern "C"
     #endif
     #undef ARA_DEPRECATED
     #define ARA_DEPRECATED(generation) ARA_WARN_DEPRECATED(generation)
+#else
+    #if defined (__clang__)
+        #undef ARA_DISABLE_DOCUMENTATION_DEPRECATED_WARNINGS_BEGIN
+        #define ARA_DISABLE_DOCUMENTATION_DEPRECATED_WARNINGS_BEGIN \
+            _Pragma ("GCC diagnostic push") \
+            _Pragma ("GCC diagnostic ignored \"-Wdocumentation-deprecated-sync\"")
+        #undef ARA_DISABLE_DOCUMENTATION_WARNINGS_END
+        #define ARA_DISABLE_DOCUMENTATION_WARNINGS_END \
+            _Pragma ("GCC diagnostic pop")
+    #endif
 #endif
+
+ARA_DISABLE_DOCUMENTATION_DEPRECATED_WARNINGS_BEGIN
 
 
 //! Markup for struct elements which were added in later revisions of the API and may be omitted
@@ -3732,6 +3746,8 @@ enum { kARAPlugInExtensionInstanceMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAPlugI
 // various configurations/decorations to ensure binary compatibility
 
 #undef ARA_32_BIT_ENUM
+
+ARA_DISABLE_DOCUMENTATION_DEPRECATED_WARNINGS_END
 
 #if defined(_MSC_VER) || defined(__GNUC__)
     #pragma pack(pop)
