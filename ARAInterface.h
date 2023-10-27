@@ -62,6 +62,10 @@ namespace ARA
 {
 extern "C"
 {
+    //! helper define to properly insert ARA namespace into C compatible headers
+    #define ARA_NAMESPACE ARA::
+#else
+    #define ARA_NAMESPACE
 #endif
 
 
