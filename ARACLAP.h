@@ -39,15 +39,18 @@ extern "C"
 //! @{
 
 //! Factory ID for retrieving the clap_ara_factory_t extension from clap_plugin_entry_t.get_factory()
-ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_FACTORY[] = "org.ara-audio.ara.factory.draft/1";
+ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_FACTORY[] = "org.ara-audio.ara.factory.draft/2";
 
 //! Extension ID for retrieving the clap_ara_plugin_extension_t from clap_plugin_t.get_extension()
-ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_PLUGINEXTENSION[] = "org.ara-audio.ara.pluginextension.draft/1";
+ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_PLUGINEXTENSION[] = "org.ara-audio.ara.pluginextension.draft/2";
 
+//! Add this feature if your plugin supports ARA.
+//! This allows hosts to detect ARA early on in the setup phase.
+#define /*ARA_DRAFT*/ CLAP_PLUGIN_FEATURE_ARA_SUPPORTED "ara:supported"
 
 //! Add this feature if your plugin requires ARA to operate (will not work as normal insert plug-in).
 //! This allows non-ARA CLAP hosts to suppress the plug-in since it cannot be used there.
-#define /*ARA_DRAFT*/ CLAP_PLUGIN_FEATURE_ONLY_ARA "only-ara"
+#define /*ARA_DRAFT*/ CLAP_PLUGIN_FEATURE_ARA_REQUIRED "ara:required"
 
 
 /***************************************************************************************************/
