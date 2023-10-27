@@ -25,9 +25,6 @@
 #include "clap/clap.h"
 
 #if defined(__cplusplus)
-// \todo or maybe not in ARA namespace? maybe even have this file in the CLAP SDK, not in the ARA SDK???
-namespace ARA
-{
 extern "C"
 {
 #endif
@@ -73,7 +70,7 @@ ARA_DRAFT typedef struct clap_ara_factory
     //! The returned pointer must remain valid until clap_plugin_entry_t.deinit() is called.
     //! The returned ARAFactory must be equal to the ARAFactory returned from instances of the
     //! associated CLAP plug-in through their clap_ara_plugin_extension_t.get_factory().
-    const ARAFactory *(CLAP_ABI *get_ara_factory)(const struct clap_ara_factory *factory, uint32_t index);
+    const ARA_NAMESPACE ARAFactory *(CLAP_ABI *get_ara_factory)(const struct clap_ara_factory *factory, uint32_t index);
 
     //! Get the ID of the CLAP plug-in associated with the ARA factory for the given index.
     //! The plug-in must be in the same binary.
@@ -91,7 +88,7 @@ ARA_DRAFT typedef struct clap_ara_factory
 ARA_DRAFT typedef struct clap_ara_plugin_extension
 {
     //! Access the ARAFactory associated with this plug-in.
-    const ARAFactory *(CLAP_ABI *get_factory)(const clap_plugin_t *plugin);
+    const ARA_NAMESPACE ARAFactory *(CLAP_ABI *get_factory)(const clap_plugin_t *plugin);
 
     //! Bind the CLAP instance to an ARA document controller, switching it from "normal" operation
     //! to ARA mode with the assigned roles, and exposing the ARA plug-in extension.
@@ -106,10 +103,11 @@ ARA_DRAFT typedef struct clap_ara_plugin_extension
     //! the clap_plugin_t instance and for deleting ARA document controller is undefined.
     //! Plug-ins must handle both potential destruction orders to allow for a simpler reference
     //! counting implementation on the host side.
-    const ARAPlugInExtensionInstance *(CLAP_ABI *bind_to_document_controller)(const clap_plugin_t       *plugin,
-                                                                              ARADocumentControllerRef   documentControllerRef,
-                                                                              ARAPlugInInstanceRoleFlags knownRoles,
-                                                                              ARAPlugInInstanceRoleFlags assignedRoles);
+    const ARA_NAMESPACE ARAPlugInExtensionInstance *(CLAP_ABI *bind_to_document_controller)
+                                                        (const clap_plugin_t                     *plugin,
+                                                         ARA_NAMESPACE ARADocumentControllerRef   documentControllerRef,
+                                                         ARA_NAMESPACE ARAPlugInInstanceRoleFlags knownRoles,
+                                                         ARA_NAMESPACE ARAPlugInInstanceRoleFlags assignedRoles);
 } clap_ara_plugin_extension_t;
 
 //! @}
@@ -118,7 +116,6 @@ ARA_DRAFT typedef struct clap_ara_plugin_extension
 
 #if defined(__cplusplus)
 }   // extern "C"
-}   // namespace ARA
 #endif
 
 #endif // ARACLAP_h
