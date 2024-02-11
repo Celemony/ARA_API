@@ -83,17 +83,10 @@
 ARA_DRAFT @protocol ARAAudioUnit <NSObject>
 
 @required
-#if defined(__cplusplus)
-- (nonnull const ARA::ARAFactory *) araFactory;
-
-- (nonnull const ARA::ARAPlugInExtensionInstance *) bindToDocumentController:(nonnull ARA::ARADocumentControllerRef) documentControllerRef
-                                                    withRoles:(ARA::ARAPlugInInstanceRoleFlags) assignedRoles
-                                                    knownRoles:(ARA::ARAPlugInInstanceRoleFlags) knownRoles;
-#else
 //! Get the ARA factory.
 //! The returned pointer must remain valid throughout the lifetime of the App Extension that contains
 //! the AUAudioUnit.
-- (nonnull const ARAFactory *) araFactory;
+@property (nonatomic, readonly, nonnull) const ARA_NAMESPACE ARAFactory * araFactory;
 
 //! Bind the AUAudioUnit instance to an ARA document controller, switching it from "normal" operation
 //! to ARA mode, and exposing the ARA plug-in extension.
@@ -108,10 +101,15 @@ ARA_DRAFT @protocol ARAAudioUnit <NSObject>
 //! the AUAudioUnit instance and for deleting ARA document controller is undefined.
 //! Plug-ins must handle both potential destruction orders to allow for a simpler reference
 //! counting implementation on the host side.
-- (nonnull const ARAPlugInExtensionInstance *) bindToDocumentController:(nonnull ARADocumentControllerRef) documentControllerRef
-                                               withRoles:(ARAPlugInInstanceRoleFlags) assignedRoles
-                                               knownRoles:(ARAPlugInInstanceRoleFlags) knownRoles;
-#endif
+- (nonnull const ARA_NAMESPACE ARAPlugInExtensionInstance *) bindToDocumentController:(nonnull ARA_NAMESPACE ARADocumentControllerRef) documentControllerRef
+                                                             withRoles:(ARA_NAMESPACE ARAPlugInInstanceRoleFlags) assignedRoles
+                                                             knownRoles:(ARA_NAMESPACE ARAPlugInInstanceRoleFlags) knownRoles;
+
+//! When loading ARA Audio Units out-of-process, the host only operates on a CoreAudio proxy instance
+//! of the actual AUAudioUnit. When performing the binding, the remote side must identify the actual
+//! instance that should be bound, so this getter is added to access the self pointer of that instance
+//! encoded as NSUInteger (equivalent to size_t) so that it can be sent back and forth across the XPC.
+@property (nonatomic, readonly) NSUInteger araRemoteInstanceRef;
 
 @end
 
@@ -120,12 +118,9 @@ ARA_DRAFT @protocol ARAAudioUnit <NSObject>
 //! The message channel for ARA_AUDIOUNIT_DOCUMENTCONTROLLER_CUSTOM_MESSAGES_UTI should only be
 //! obtained and configured once, it will also be used for all document controller communications
 //! based on the factories.
-//! The message channel for ARA_AUDIOUNIT_PLUGINEXTENSION_CUSTOM_MESSAGES_UTI on the other hand
-//! should be managed per ARA-enabled Audio Unit plug-in instance.
 //! This API may eventually replace the above ARAAudioUnit <NSObject> draft.
 //@{
 #define ARA_AUDIOUNIT_FACTORY_CUSTOM_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.factory"
-#define ARA_AUDIOUNIT_PLUGINEXTENSION_CUSTOM_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.pluginextension"
 //@}
 
 
