@@ -115,12 +115,12 @@ ARA_DRAFT @protocol ARAAudioUnit <NSObject>
 
 
 //! UTIs for ARA message protocols used for [AUAudioUnit messageChannelFor:] (added in macOS 13)
-//! The message channel for ARA_AUDIOUNIT_DOCUMENTCONTROLLER_CUSTOM_MESSAGES_UTI should only be
-//! obtained and configured once, it will also be used for all document controller communications
-//! based on the factories.
+//! The message channels should only be obtained and configured once per remote process
+//! and be shared across all ARA Audio Unit or ARA document controller communications.
 //! This API may eventually replace the above ARAAudioUnit <NSObject> draft.
 //@{
-#define ARA_AUDIOUNIT_FACTORY_CUSTOM_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.factory"
+#define ARA_AUDIOUNIT_MAIN_THREAD_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.main"
+#define ARA_AUDIOUNIT_OTHER_THREADS_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.other"
 //@}
 
 
