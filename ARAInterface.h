@@ -347,7 +347,7 @@ typedef ARAInt32 ARAChannelCount;
 //! channels of an audio signal, ARA directly uses the respective companion API's model of
 //! spacial arrangement. Since different companion APIs are available, this enum specifies which
 //! abstraction is used.
-typedef ARA_32_BIT_ENUM(ARAChannelArrangementDataType)
+ARA_ADDENDUM(2_0_Final) typedef ARA_32_BIT_ENUM(ARAChannelArrangementDataType)
 {
     //! Used to indicate the feature is not supported/used (e.g. mono or stereo).
     kARAChannelArrangementUndefined = 0,
@@ -363,9 +363,9 @@ typedef ARA_32_BIT_ENUM(ARAChannelArrangementDataType)
     kARAChannelArrangementAAXStemFormat = 3,
     //! For CLAP surround, the channel arrangement is specified as a channel map,
     //! i.e. an array of uint8_t with ARAAudioSourceProperties.channelCount entries.
-    ARA_DRAFT kARAChannelArrangementCLAPChannelMap = 4,
+    kARAChannelArrangementCLAPChannelMap = 4,
     //! For CLAP ambisonic, the channel arrangement is specified as clap_ambisonic_info.
-    ARA_DRAFT kARAChannelArrangementCLAPAmbisonicInfo = 5
+    kARAChannelArrangementCLAPAmbisonicInfo = 5
 };
 
 //! @}

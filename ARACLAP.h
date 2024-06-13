@@ -36,18 +36,26 @@ extern "C"
 //! @{
 
 //! Factory ID for retrieving the clap_ara_factory_t extension from clap_plugin_entry_t.get_factory()
-ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_FACTORY[] = "org.ara-audio.ara.factory.draft/2";
+static CLAP_CONSTEXPR const char CLAP_EXT_ARA_FACTORY[] = "org.ara-audio.ara.factory/2";
+
+// The latest draft is 100% compatible.
+// This compat ID may be removed in 2026.
+ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_FACTORY_COMPAT[] = "org.ara-audio.ara.factory.draft/2";
 
 //! Extension ID for retrieving the clap_ara_plugin_extension_t from clap_plugin_t.get_extension()
-ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_PLUGINEXTENSION[] = "org.ara-audio.ara.pluginextension.draft/2";
+static CLAP_CONSTEXPR const char CLAP_EXT_ARA_PLUGINEXTENSION[] = "org.ara-audio.ara.pluginextension/2";
+
+// The latest draft is 100% compatible.
+// This compat ID may be removed in 2026.
+ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_PLUGINEXTENSION_COMPAT[] = "org.ara-audio.ara.pluginextension.draft/2";
 
 //! Add this feature if your plugin supports ARA.
 //! This allows hosts to detect ARA early on in the setup phase.
-#define /*ARA_DRAFT*/ CLAP_PLUGIN_FEATURE_ARA_SUPPORTED "ara:supported"
+#define CLAP_PLUGIN_FEATURE_ARA_SUPPORTED "ara:supported"
 
 //! Add this feature if your plugin requires ARA to operate (will not work as normal insert plug-in).
 //! This allows non-ARA CLAP hosts to suppress the plug-in since it cannot be used there.
-#define /*ARA_DRAFT*/ CLAP_PLUGIN_FEATURE_ARA_REQUIRED "ara:required"
+#define CLAP_PLUGIN_FEATURE_ARA_REQUIRED "ara:required"
 
 
 /***************************************************************************************************/
@@ -58,7 +66,7 @@ ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_PLUGINEXTENSION[] = "org
 //! For rendering and editing the model however, there must be an associated clap_plugin_t provided in
 //! the same binary - the descriptor for which is returned at the same index as the related ARAFactory.
 
-ARA_DRAFT typedef struct clap_ara_factory
+typedef struct clap_ara_factory
 {
     //! Get the number of ARA factories (i.e. ARA-capable plug.-ins) available.
     //! Note that the regular clap_plugin_factory can contain more plug-ins if these do not support
@@ -85,7 +93,7 @@ ARA_DRAFT typedef struct clap_ara_factory
 //! Return an pointer to a clap_ara_plugin_extension_t when clap_plugin_t.get_extension() is called
 //! with CLAP_EXT_ARA_PLUGINEXTENSION.
 
-ARA_DRAFT typedef struct clap_ara_plugin_extension
+typedef struct clap_ara_plugin_extension
 {
     //! Access the ARAFactory associated with this plug-in.
     const ARA_NAMESPACE ARAFactory *(CLAP_ABI *get_factory)(const clap_plugin_t *plugin);

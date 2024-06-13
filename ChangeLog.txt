@@ -14,8 +14,8 @@ Proposed Features currently scheduled targeted for this subrelease:
 
 
 Changes since previous releases:
+- CLAP is now fully supported as companion API
 - initial draft of Audio Unit version 3 support (App Extension, incl. IPC when not loaded in-process)
-- initial draft of CLAP support
 - required minimum CMake version increased from 3.4 to 3.19 (same as VST3)
 
 
