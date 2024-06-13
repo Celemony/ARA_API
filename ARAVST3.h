@@ -35,27 +35,7 @@
     #if defined (_MSC_VER)
         #define ARA_DISABLE_VST3_WARNINGS_BEGIN \
             __pragma (warning(push)) \
-            __pragma (warning(disable : 4310)) /*cast truncates constant value*/\
-            __pragma (warning(disable : 4365)) /*signed/unsigned mismatch*/\
-            __pragma (warning(disable : 4996)) /*function may be unsafe*/\
-            __pragma (warning(disable : 6011)) /*dereferencing NULL pointer*/\
-            __pragma (warning(disable : 6031)) /*return value ignored*/\
-            __pragma (warning(disable : 6308)) /*'realloc' may return null pointer*/\
-            __pragma (warning(disable : 6330)) /*'const char' passed when 'unsigned char' is required*/\
-            __pragma (warning(disable : 6385)) /*readable size is smaller than bytes may be read*/\
-            __pragma (warning(disable : 6386)) /*buffer overrun*/\
-            __pragma (warning(disable : 26434)) /*function hides a non-virtual function*/\
-            __pragma (warning(disable : 26435)) /*virtual functions should specify exactly one of virtual, override, or final*/\
-            __pragma (warning(disable : 26439)) /*if your function may not throw, declare it noexcept*/\
-            __pragma (warning(disable : 26443)) /*overriding destructor should not use explicit 'override' or 'virtual' specifiers*/\
-            __pragma (warning(disable : 26451)) /*arithmetic overflow*/\
-            __pragma (warning(disable : 26456)) /*hiding base methods that aren't virtual is error prone*/\
-            __pragma (warning(disable : 26461)) /*pointer argument can be marked as a pointer to const*/\
-            __pragma (warning(disable : 26496)) /*variable is assigned only once, mark it as const*/\
-            __pragma (warning(disable : 26812)) /*enum type is unscoped*/\
-            __pragma (warning(disable : 26814)) /*const variable can be computed at compile-time*/\
-            __pragma (warning(disable : 28199)) /*using possibly uninitialized memory*/\
-            __pragma (warning(disable : 28251)) /*inconsistent annotation for function*/
+            __pragma (warning(disable : 4365)) /*signed/unsigned mismatch*/
         #define ARA_DISABLE_VST3_WARNINGS_END \
             __pragma (warning(pop))
     #elif defined (__GNUC__)
@@ -68,24 +48,19 @@
         #endif
         #if defined (__clang__)
             #define ARA_DISABLE_VST3_GCC_VARIANT_WARNINGS \
-                _Pragma ("GCC diagnostic ignored \"-Wshadow-field\"") \
                 _Pragma ("GCC diagnostic ignored \"-Wshadow-field-in-constructor\"") \
-                _Pragma ("GCC diagnostic ignored \"-Winconsistent-missing-destructor-override\"") \
                 _Pragma ("GCC diagnostic ignored \"-Wzero-as-null-pointer-constant\"") \
                 _Pragma ("GCC diagnostic ignored \"-Wreserved-id-macro\"")
         #else
             #define ARA_DISABLE_VST3_GCC_VARIANT_WARNINGS \
-                _Pragma ("GCC diagnostic ignored \"-Wshadow\"") \
-                _Pragma ("GCC diagnostic ignored \"-Wclass-memaccess\"")
+                _Pragma ("GCC diagnostic ignored \"-Wshadow\"")
         #endif
         #define ARA_DISABLE_VST3_WARNINGS_BEGIN \
             _Pragma ("GCC diagnostic push") \
             _Pragma ("GCC diagnostic ignored \"-Wnon-virtual-dtor\"") \
-            _Pragma ("GCC diagnostic ignored \"-Wunused-parameter\"") \
             _Pragma ("GCC diagnostic ignored \"-Wsign-conversion\"") \
             _Pragma ("GCC diagnostic ignored \"-Wold-style-cast\"") \
             _Pragma ("GCC diagnostic ignored \"-Wextra-semi\"") \
-            _Pragma ("GCC diagnostic ignored \"-Wignored-qualifiers\"") \
             _Pragma ("GCC diagnostic ignored \"-Wundef\"") \
             ARA_DISABLE_VST3_PRAGMA_PACK_WARNINGS \
             ARA_DISABLE_VST3_GCC_VARIANT_WARNINGS
