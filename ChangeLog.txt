@@ -9,11 +9,11 @@ Proposed Features which have been postponed to a later subrelease:
 
 
 Proposed Features currently scheduled targeted for this subrelease:
-- full AAX Companion API integration
 - waveform envelope overview (previous draft had been temporarily removed until after ARA 2.0 release)
 
 
 Changes since previous releases:
+- AAX is now fully supported as companion API
 - CLAP is now fully supported as companion API
 - initial draft of Audio Unit version 3 support (App Extension, incl. IPC when not loaded in-process)
 - required minimum CMake version increased from 3.4 to 3.19 (same as VST3)
