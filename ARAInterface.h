@@ -3461,12 +3461,16 @@ ARA_ADDENDUM(2_0_Draft) typedef struct ARAPlaybackRendererInterface
 //@}
 
 //! @name Assigning the playback region(s) for playback rendering
-//! Specify the playback region(s) for which the this plug-in instance provides playback rendering.
+//! Specify the playback region(s) for which the this plug-in instance provides playback rendering
 //! (and, if using ARA1 which does not distinguish roles: also editor rendering and view).
-//! These calls can only be made when the plug-in is not in render-state ("not active" in VST3
-//! speak, "not initialized" in AU-speak), however the host may display the UI for the plug-in
-//! while making these calls.
-//! They can be made both inside or outside any editing or restoration cycles of the associated
+//! These calls must only be made when the plug-in is not in render-state (aka "not active" in VST3
+//! and CLAP, "not initialized"/"render resources not allocated" in Audio Unit v2/v3), but the host
+//! may display the UI for the plug-in while making these calls.
+//! Some companion APIs such AAX do not provide an explicit API to communicate the render state to
+//! the plug-in. In that case, the host needs to make sure it does not concurrently render the plug-in
+//! while changing playback regions for a playback renderer, and the plug-in can accordingly toggle
+//! its internal render state back and forth as needed while these calls are executed.
+//! The calls can be made both inside or outside any editing or restoration cycles of the associated
 //! ARA document controller, but doing them between ARADocumentControllerInterface::beginEditing()
 //! and ARADocumentControllerInterface::endEditing() when feasible may yield better performance
 //! since all updates can be calculated together.
