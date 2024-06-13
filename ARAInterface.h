@@ -2089,6 +2089,8 @@ typedef struct ARAModelUpdateControllerInterface
     //! completion state of the analysis itself is considered to be a part of the overall content.
     //! Thus, if it changes, the overall content has changed, even if neither the grade nor the data
     //! for content readers did change (e.g. because an analysis failed to provide proper results).
+    //! Plug-ins must send this notification reliably to avoid data loss when hosts rely on it in
+    //! order to optimize saving ARA data only when it has actually changed.
     void (ARA_CALL *notifyAudioSourceContentChanged) (ARAModelUpdateControllerHostRef controllerHostRef, ARAAudioSourceHostRef audioSourceHostRef,
                                                       const ARAContentTimeRange * range, ARAContentUpdateFlags flags);
 
@@ -2105,6 +2107,8 @@ typedef struct ARAModelUpdateControllerInterface
     //! This changed with the introduction of content-based fades in ARA 2.0, because playback region
     //! content can now change without any audio modification changes - hosts should now use playback
     //! region readers to visualize content in their arrangement, see below.
+    //! Plug-ins must send this notification reliably to avoid data loss when hosts rely on it in
+    //! order to optimize saving ARA data only when it has actually changed.
     void (ARA_CALL *notifyAudioModificationContentChanged) (ARAModelUpdateControllerHostRef controllerHostRef, ARAAudioModificationHostRef audioModificationHostRef,
                                                             const ARAContentTimeRange * range, ARAContentUpdateFlags flags);
 
@@ -2126,6 +2130,14 @@ typedef struct ARAModelUpdateControllerInterface
     //! head and tail time, which may be updated at the same time) is affected.
     ARA_ADDENDUM(2_0_Draft) void (ARA_CALL *notifyPlaybackRegionContentChanged) (ARAModelUpdateControllerHostRef controllerHostRef, ARAPlaybackRegionHostRef playbackRegionHostRef,
                                                                                  const ARAContentTimeRange * range, ARAContentUpdateFlags flags);
+
+    //! Message to the host when private, opaque document state that is not associated with any audio
+    //! source or modification changes (added in ARA 2.x).
+    //! Saving/restoring this data is controlled via ARAStoreObjectsFilter::documentData and
+    //! ARARestoreObjectsFilter::documentData, see there.
+    //! Plug-ins must send this notification reliably to avoid data loss when hosts rely on it in
+    //! order to optimize saving ARA data only when it has actually changed.
+    ARA_DRAFT void (ARA_CALL *notifyDocumentDataChanged) (ARAModelUpdateControllerHostRef controllerHostRef);
 } ARAModelUpdateControllerInterface;
 
 // Convenience constant for easy struct validation.
