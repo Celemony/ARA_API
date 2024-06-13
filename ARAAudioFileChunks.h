@@ -82,7 +82,7 @@ extern "C"
 //! here: http://www.ixml.info
 //! Inside the iXML document, there's a custom tag \<ARA\> that encloses a dictionary of audio
 //! source archives, encoded as array tagged \<audioSources\>. Each entry in the array is intended
-//! for a different plug-in (or incompatible version fo a plug-in) and contains the tag
+//! for a different plug-in (or incompatible version of a plug-in) and contains the tag
 //! \<documentArchiveID\> which also functions as the key for the dictionary, and associated data
 //! which includes the actual binary archive and meta information, for example:
 //! \code{.xml}

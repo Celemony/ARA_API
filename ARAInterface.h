@@ -344,8 +344,8 @@ typedef double ARASampleRate;
 typedef ARAInt32 ARAChannelCount;
 
 //! To avoid defining yet another abstraction of spacial layout information for the individual
-//! channels of an audio signal, ARA directly uses the respective Companion API's model of
-//! spacial arrangement. Since different Companion APIs are available, this enum specifies which
+//! channels of an audio signal, ARA directly uses the respective companion API's model of
+//! spacial arrangement. Since different companion APIs are available, this enum specifies which
 //! abstraction is used.
 typedef ARA_32_BIT_ENUM(ARAChannelArrangementDataType)
 {
@@ -493,8 +493,8 @@ typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
     //! supported by Studio One, Logic Pro, Cubase/Nuendo, Cakewalk, REAPER, Melodyne, ReVoice Pro, VocAlign, Auto-Align, SpectraLayers
     kARAAPIGeneration_2_0_Draft = 3,
 #endif
-    //! most developers supporting kARAAPIGeneration_2_0_Draft are already working on updating to kARAAPIGeneration_2_0_Final
-    //! (this is also required for ARM builds)
+    //! supported by Pro Tools
+    //! also required on ARM platforms - all ARM-compatible ARA vendors are now supporting this
     kARAAPIGeneration_2_0_Final = 4,
     //! reserved for future development
     kARAAPIGeneration_2_X_Draft = 5
@@ -867,7 +867,7 @@ typedef struct ARAAudioSourceProperties
     ARABool merits64BitSamples;
 
     //! Type information of the data the opaque #channelArrangement actually points to.
-    //! Host shall use the data type associated with the Companion API that was used to create
+    //! Host shall use the data type associated with the companion API that was used to create
     //! the respective document controller.
     ARA_ADDENDUM(2_0_Final) ARAChannelArrangementDataType channelArrangementDataType;
 
@@ -881,7 +881,7 @@ typedef struct ARAAudioSourceProperties
     //! for stereo, channel 0 is the left and channel 1 the right speaker.
     //! \br
     //! To determine which channel arrangements are supported by the plug-in, the host will use the
-    //! Companion API and read the valid render input formats.
+    //! companion API and read the valid render input formats.
     ARA_ADDENDUM(2_0_Final) const void * channelArrangement;
 } ARAAudioSourceProperties;
 
@@ -1048,6 +1048,7 @@ typedef struct ARAPlaybackRegionProperties
     ARA_DEPRECATED(2_0_Draft) ARAMusicalContextRef musicalContextRef;
 
     //! Region sequence with which the playback region is associated in the host.
+    //! Required when using ARA 2_0_Draft or newer.
     ARA_ADDENDUM(2_0_Draft) ARARegionSequenceRef regionSequenceRef;
 
     //! User-readable name of the playback region as displayed in the host.
@@ -2102,9 +2103,8 @@ typedef struct ARAModelUpdateControllerInterface
     //! are affected as well if their range in modification time intersects with the given time range.
     //! Because of this, there was no separate change notification for playback region in ARA 1.
     //! This changed with the introduction of content-based fades in ARA 2.0, because playback region
-    //! content can now change without any audio modification changes.
-    //! For many use cases, hosts that implement ARA 2 do no longer concern themselves with this call
-    //! (unless they are also hosting ARA 1 plug-ins and implement an according ARA 2 adapter).
+    //! content can now change without any audio modification changes - hosts should now use playback
+    //! region readers to visualize content in their arrangement, see below.
     void (ARA_CALL *notifyAudioModificationContentChanged) (ARAModelUpdateControllerHostRef controllerHostRef, ARAAudioModificationHostRef audioModificationHostRef,
                                                             const ARAContentTimeRange * range, ARAContentUpdateFlags flags);
 
@@ -2632,10 +2632,13 @@ typedef struct ARADocumentControllerInterface
     ARAAudioModificationRef (ARA_CALL *createAudioModification) (ARADocumentControllerRef controllerRef, ARAAudioSourceRef audioSourceRef,
                                                                  ARAAudioModificationHostRef hostRef, const ARAAudioModificationProperties * properties);
 
-    //! Create a new audio modification that copies the state of another given audio modification.
+    //! Create a new audio modification which copies the state of another given audio modification.
     //! The new modification will be associated with the same audio source.
-    //! This call is used to create independent variations of the audio as opposed to creating
+    //! This call is used to create independent variations of the audio edits as opposed to creating
     //! aliases by merely adding playback regions to a given audio modification.
+	//! Note that with the introduction of partial persistency with ARA 2.0, hosts can achieve the
+	//! same effect by creating an archive of the modification that should be cloned and unarchiving
+	//! that state into a new modification.
     ARAAudioModificationRef (ARA_CALL *cloneAudioModification) (ARADocumentControllerRef controllerRef, ARAAudioModificationRef audioModificationRef,
                                                                 ARAAudioModificationHostRef hostRef, const ARAAudioModificationProperties * properties);
 

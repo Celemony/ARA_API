@@ -26,7 +26,7 @@ Changes since previous releases:
 
 === ARA SDK 2.1 release (aka 2.1.001) (2022/01/06) ===
 - finalized ARM support for Apple Silicon
-- enable ARA audio file chunk authoring directly in the host
+- enabled ARA audio file chunk authoring directly in the host
 
 
 === ARA SDK 2.0 release (aka 2.0.001) (2021/05/03) ===
@@ -69,8 +69,8 @@ ARA SDK 2.0 draft 11 (aka 1.9.11) (2020/04/02)
 - clarified time based vs. object based host selection
 
 ARA SDK 2.0 draft 10 (aka 1.9.10) (2020/03/13)
-- clarifying persistency of deactivation state for audio sources and audio modifications
-- hosts are no longer required to close any UI before dactivating audio modifications
+- clarified persistency of deactivation state for audio sources and audio modifications
+- hosts are no longer required to close any UI before deactivating audio modifications
 - pdf documentation revamped to be more compact
 
 ARA SDK 2.0 draft 9 (aka 1.9.9) (2019/12/06)
