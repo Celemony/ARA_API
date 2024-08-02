@@ -4,19 +4,17 @@ This is a development build of the ARA API 2.3.
 
 Proposed Features which have been postponed to a later subrelease:
 - integration of plug-in undo history integration into the host
+- waveform envelope overview (previous draft temporarily removed)
 - support for dynamic tuning such as Hermode (previous draft temporarily removed)
 - support for automatic adaption of tuning and harmonic context (previous draft temporarily removed)
-
-
-Proposed Features currently scheduled targeted for this subrelease:
-- waveform envelope overview (previous draft had been temporarily removed until after ARA 2.0 release)
-
 
 Changes since previous releases:
 - AAX is now fully supported as companion API
 - CLAP is now fully supported as companion API
 - initial draft of Audio Unit version 3 support (App Extension, incl. IPC when not loaded in-process)
 - added API to notify the host when the private, opaque document state changes (to trigger saving it)
+  and incremented API generation to allow plug-ins to indicate that they fully conform to sending
+  notifications whenever any part of their persistent state changes
 - required minimum CMake version increased from 3.4 to 3.19 (same as VST3)
 
 

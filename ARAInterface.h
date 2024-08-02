@@ -496,8 +496,11 @@ typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
     //! supported by Pro Tools
     //! also required on ARM platforms - all ARM-compatible ARA vendors are now supporting this
     kARAAPIGeneration_2_0_Final = 4,
-    //! reserved for future development
-    kARAAPIGeneration_2_X_Draft = 5
+    //! used during 2.x development
+    kARAAPIGeneration_2_X_Draft = 5,
+    //! conforming plug-ins will send proper change notifications when their persistent state changes
+    //! via ARAModelUpdateControllerInterface, allowing the host to only save what has actually changed.
+    kARAAPIGeneration_2_3_Final = 6
 };
 
 //! @}
@@ -2132,12 +2135,12 @@ typedef struct ARAModelUpdateControllerInterface
                                                                                  const ARAContentTimeRange * range, ARAContentUpdateFlags flags);
 
     //! Message to the host when private, opaque document state that is not associated with any audio
-    //! source or modification changes (added in ARA 2.x).
+    //! source or modification changes (added in ARA 2.3).
     //! Saving/restoring this data is controlled via ARAStoreObjectsFilter::documentData and
     //! ARARestoreObjectsFilter::documentData, see there.
     //! Plug-ins must send this notification reliably to avoid data loss when hosts rely on it in
     //! order to optimize saving ARA data only when it has actually changed.
-    ARA_DRAFT void (ARA_CALL *notifyDocumentDataChanged) (ARAModelUpdateControllerHostRef controllerHostRef);
+    ARA_ADDENDUM(2_3_Final) void (ARA_CALL *notifyDocumentDataChanged) (ARAModelUpdateControllerHostRef controllerHostRef);
 } ARAModelUpdateControllerInterface;
 
 // Convenience constant for easy struct validation.
