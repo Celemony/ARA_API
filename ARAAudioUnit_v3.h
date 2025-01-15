@@ -119,8 +119,8 @@ ARA_DRAFT @protocol ARAAudioUnit <NSObject>
 //! and be shared across all ARA Audio Unit or ARA document controller communications.
 //! This API may eventually replace the above ARAAudioUnit <NSObject> draft.
 //@{
-#define ARA_AUDIOUNIT_MAIN_THREAD_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.main"
-#define ARA_AUDIOUNIT_OTHER_THREADS_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.other"
+#define ARA_AUDIOUNIT_MAIN_THREAD_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.main.draft.1"
+#define ARA_AUDIOUNIT_OTHER_THREADS_MESSAGES_UTI /*ARA_DRAFT*/ @"org.ara-audio.other.draft.1"
 //@}
 
 
