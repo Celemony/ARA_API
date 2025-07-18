@@ -1137,6 +1137,9 @@ typedef ARA_32_BIT_ENUM(ARAContentUpdateFlags)
     //! The actual signal is unaffected by the change.
     //! Note that in some cases even when the signal is considered to be unchanged, the values of
     //! the actual sample data may change, e.g. if the user applies a sample rate conversion.
+    //! Whenever the output signal for a playback region changes, this implies that the head
+    //! and tail times for that region may have changed too, so the host must update these values
+    //! after receiving such a change.
     kARAContentUpdateSignalScopeRemainsUnchanged = 1<<0,
 
     //! Content information for notes, beat-markers etc. is unaffected by the change.
@@ -2651,9 +2654,9 @@ typedef struct ARADocumentControllerInterface
     //! The new modification will be associated with the same audio source.
     //! This call is used to create independent variations of the audio edits as opposed to creating
     //! aliases by merely adding playback regions to a given audio modification.
-	//! Note that with the introduction of partial persistency with ARA 2.0, hosts can achieve the
-	//! same effect by creating an archive of the modification that should be cloned and unarchiving
-	//! that state into a new modification.
+    //! Note that with the introduction of partial persistency with ARA 2.0, hosts can achieve the
+    //! same effect by creating an archive of the modification that should be cloned and unarchiving
+    //! that state into a new modification.
     ARAAudioModificationRef (ARA_CALL *cloneAudioModification) (ARADocumentControllerRef controllerRef, ARAAudioModificationRef audioModificationRef,
                                                                 ARAAudioModificationHostRef hostRef, const ARAAudioModificationProperties * properties);
 
