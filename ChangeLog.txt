@@ -15,6 +15,7 @@ Changes since previous releases:
 - added API to notify the host when the private, opaque document state changes (to trigger saving it)
   and incremented API generation to allow plug-ins to indicate that they fully conform to sending
   notifications whenever any part of their persistent state changes
+- add createDistinctAudioModification flag to ARA audio file chunk
 - required minimum CMake version increased from 3.4 to 3.19 (same as VST3)
 
 

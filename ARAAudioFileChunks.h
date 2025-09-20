@@ -126,6 +126,11 @@ extern "C"
     //! the ARA archive later on demand when the user manually requests it by adding a matching plug-in.
     //! boolean value ("true" or "false").
     constexpr auto kARAXMLName_OpenAutomatically { "openAutomatically" };
+    //! Name of the XML element inside an audio source archive that indicates whether the host should
+    //! create a new audio modification each time the file/audio source is dragged into the song,
+    //! or re-use the initial audio modification created upon the first drag.
+    //! boolean value ("true" or "false").
+    constexpr auto kARAXMLName_CreateDistinctAudioModification { "createDistinctAudioModification" };
     //! Name of the XML element inside an audio source archive that provides user-readable information
     //! about the plug-in for which the archive was originally created. This can be used for proper
     //! error messages, e.g. if openAutomatically is true but no plug-in compatible with the archive's
