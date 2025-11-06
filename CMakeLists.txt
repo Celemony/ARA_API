@@ -47,9 +47,9 @@ if(APPLE)
     list(INSERT ARA_API_Files 2
         "${CMAKE_CURRENT_SOURCE_DIR}/ARAAudioUnit.h"
     )
-    list(INSERT ARA_API_Files 3
-        "${CMAKE_CURRENT_SOURCE_DIR}/ARAAudioUnit_v3.h"
-    )
+#   list(INSERT ARA_API_Files 3
+#       "${CMAKE_CURRENT_SOURCE_DIR}/ARAAudioUnit_v3.h"
+#   )
 endif()
 
 add_library(ARA_API INTERFACE ${ARA_API_Files})
