@@ -16,7 +16,7 @@
 # limitations under the License.
 # ======================
 
-set(ARA_MAJOR_VERSION 2)
-set(ARA_MINOR_VERSION 3)
+set(ARA_MAJOR_VERSION 3)
+set(ARA_MINOR_VERSION 0)
 set(ARA_PATCH_VERSION 0)
 set(ARA_BUILD_VERSION 001)

@@ -1,9 +1,16 @@
-Proposed Features which have been postponed to a later subrelease:
-- Audio Unit version 3 support (App Extension, incl. IPC when not loaded in-process)
+This is a development build of the ARA API 3.0.
+=== PRELIMINARY - DO NOT USE FOR SHIPPING PRODUCTS! ===
+
+
+Proposed Features which are still under discussion:
 - integration of plug-in undo history integration into the host
 - waveform envelope overview (previous draft temporarily removed)
 - support for dynamic tuning such as Hermode (previous draft temporarily removed)
 - support for automatic adaption of tuning and harmonic context (previous draft temporarily removed)
+
+
+Changes since previous releases:
+- initial draft of Audio Unit version 3 support (App Extension, incl. IPC when not loaded in-process)
 
 
 === ARA SDK 2.3 release (aka 2.3.001) (2025/11/07) ===
