@@ -1435,8 +1435,8 @@ typedef struct ARAContentNote
     //! This value is scaled according to human perception (i.e. closer to a dB scale than to a linear one).
     float volume;
 
-    //! Time marking the beginning of the note (aka "note on" in MIDI), relative to the start of the
-    //! described object (audio source/playback region).
+    //! Time in seconds marking the beginning of the note (aka "note on" in MIDI), relative to the
+    //! start of the song or the audio source/modification.
     ARATimePosition startPosition;
 
     //! Time marking the musical/quantization anchor of the note, relative to the start of the note.
