@@ -491,7 +491,7 @@ typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
     //! supported by Studio One, Cakewalk/SONAR, Samplitude Pro, Mixcraft, Waveform/Tracktion, Melodyne, VocAlign, AutoTune
     ARA_DEPRECATED(3_0_Draft) kARAAPIGeneration_1_0_Final = 2,
     //! supported by Studio One, Logic Pro, Cubase/Nuendo, Cakewalk, REAPER, Melodyne, ReVoice Pro, VocAlign, Auto-Align, SpectraLayers
-    kARAAPIGeneration_2_0_Draft = 3,
+    ARA_DEPRECATED(3_0_Draft) kARAAPIGeneration_2_0_Draft = 3,
 #endif
     //! supported by Pro Tools
     //! also required on ARM platforms - all ARM-compatible ARA vendors are now supporting this
