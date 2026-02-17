@@ -177,11 +177,11 @@ ARA_DISABLE_DOCUMENTATION_DEPRECATED_WARNINGS_BEGIN
 //! All uses of this macro will be replaced by ARA_ADDENDUM() upon final release.
 //! To quickly find all places in your project that use draft API, it's possible to temporarily
 //! redefine ARA_DRAFT to ARA_WARN_DEPRECATED(...).
-#define ARA_DRAFT ARA_ADDENDUM(2_X_Draft)
+#define ARA_DRAFT ARA_ADDENDUM(3_0_Draft)
 
 // use this alternate definition to trigger a "deprecation" warning for every location draft API is used
 //#undef ARA_DRAFT
-//#define ARA_DRAFT ARA_WARN_DEPRECATED(2_X_Draft)
+//#define ARA_DRAFT ARA_WARN_DEPRECATED(3_0_Draft)
 
 //! @}
 
@@ -496,11 +496,13 @@ typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
     //! supported by Pro Tools
     //! also required on ARM platforms - all ARM-compatible ARA vendors are now supporting this
     kARAAPIGeneration_2_0_Final = 4,
-    //! used during 2.x development
+    //! unstable, used during 2.x development, should not be used in shipping products
     kARAAPIGeneration_2_X_Draft = 5,
     //! conforming plug-ins will send proper change notifications when their persistent state changes
     //! via ARAModelUpdateControllerInterface, allowing the host to only save what has actually changed.
-    kARAAPIGeneration_2_3_Final = 6
+    kARAAPIGeneration_2_3_Final = 6,
+    //! unstable, used during 3.0 development, should not be used in shipping products
+    kARAAPIGeneration_3_0_Draft = 7
 };
 
 //! @}
