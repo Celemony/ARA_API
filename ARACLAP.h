@@ -38,16 +38,8 @@ extern "C"
 //! Factory ID for retrieving the clap_ara_factory_t extension from clap_plugin_entry_t.get_factory()
 static CLAP_CONSTEXPR const char CLAP_EXT_ARA_FACTORY[] = "org.ara-audio.ara.factory/2";
 
-// The latest draft is 100% compatible.
-// This compat ID may be removed in 2026.
-ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_FACTORY_COMPAT[] = "org.ara-audio.ara.factory.draft/2";
-
 //! Extension ID for retrieving the clap_ara_plugin_extension_t from clap_plugin_t.get_extension()
 static CLAP_CONSTEXPR const char CLAP_EXT_ARA_PLUGINEXTENSION[] = "org.ara-audio.ara.pluginextension/2";
-
-// The latest draft is 100% compatible.
-// This compat ID may be removed in 2026.
-ARA_DRAFT static CLAP_CONSTEXPR const char CLAP_EXT_ARA_PLUGINEXTENSION_COMPAT[] = "org.ara-audio.ara.pluginextension.draft/2";
 
 //! Add this feature if your plugin supports ARA.
 //! This allows hosts to detect ARA early on in the setup phase.
