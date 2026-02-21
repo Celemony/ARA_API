@@ -793,6 +793,12 @@ ARA_ADDENDUM(2_0_Draft) typedef struct ARARegionSequenceProperties
     //! The plug-in must copy the color, the pointer may be only valid for the duration of the call.
     //! It may be NULL if the host cannot provide a color for the region sequence.
     ARA_ADDENDUM(2_0_Draft) const ARAColor * color;
+
+    //! ID used to re-connect model graph when archiving/unarchiving.
+    //! This ID must be unique for all region sequences within the document.
+    //! The plug-in must copy the persistentID, the pointer may be only valid for the duration of the call.
+    ARA_DRAFT ARAPersistentID persistentID;
+
 } ARARegionSequenceProperties;
 
 // Convenience constant for easy struct validation.
@@ -2333,6 +2339,20 @@ ARA_ADDENDUM(2_0_Final) typedef struct ARARestoreObjectsFilter
     //! If no mapping is desired, i.e. all audio modification persistent IDs to restore match those in
     //! the current graph, the pointer should be NULL.
     const ARAPersistentID * audioModificationCurrentIDs;
+
+    //! Length of #regionSequenceArchiveIDs and #regionSequenceCurrentIDs (if provided).
+    ARA_DRAFT ARASize regionSequenceIDsCount;
+
+    //! Variable-sized C array listing the persistent IDs of the archived region sequence to restore.
+    //! The list may be empty, in which case count should be 0 and the pointer NULL.
+    ARA_DRAFT const ARAPersistentID * regionSequenceArchiveIDs;
+
+    //! Optional variable-sized C array mapping each of the persistent IDs provided in regionSequenceArchiveIDs
+    //! to a potentially different persistent ID currently used for the region sequence to be restore
+    //! in the current graph.
+    //! If no mapping is desired, i.e. all region sequence persistent IDs to restore match those in
+    //! the current graph, the pointer should be NULL.
+    ARA_DRAFT const ARAPersistentID * regionSequenceCurrentIDs;
 } ARARestoreObjectsFilter;
 
 // Convenience constant for easy struct validation.
@@ -2388,6 +2408,13 @@ ARA_ADDENDUM(2_0_Final) typedef struct ARAStoreObjectsFilter
     //! Variable-sized C array listing the audio modifications to store.
     //! The list may be empty, in which case count should be 0 and the pointer NULL.
     const ARAAudioModificationRef * audioModificationRefs;
+
+    //! Length of #regionSequenceRefs.
+    ARA_DRAFT ARASize regionSequenceRefsCount;
+
+    //! Variable-sized C array listing the region sequences to store.
+    //! The list may be empty, in which case count should be 0 and the pointer NULL.
+    ARA_DRAFT const ARARegionSequenceRef * regionSequenceRefs;
 } ARAStoreObjectsFilter;
 
 // Convenience constant for easy struct validation.
