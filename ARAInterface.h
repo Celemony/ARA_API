@@ -1160,7 +1160,10 @@ typedef ARA_32_BIT_ENUM(ARAContentUpdateFlags)
     ARA_ADDENDUM(2_0_Final) kARAContentUpdateTuningScopeRemainsUnchanged = 1<<3,
 
     //! Content readers for key signatures, chords etc. are unaffected by the change. (added in ARA 2.0)
-    ARA_ADDENDUM(2_0_Final) kARAContentUpdateHarmonicScopeRemainsUnchanged = 1<<4
+    ARA_ADDENDUM(2_0_Final) kARAContentUpdateHarmonicScopeRemainsUnchanged = 1<<4,
+
+    //! Content readers for lyrics are unaffected by the change. (added in ARA 3.0)
+    ARA_DRAFT kARAContentUpdateLyricsScopeRemainsUnchanged = 1<<5
 };
 
 //! @}
@@ -1246,7 +1249,27 @@ typedef ARA_32_BIT_ENUM(ARAContentType)
     //! Returns const ARAContentChord * for each chord in a lead-sheet-like notation.
     //! (i.e. the sheet chord can imply notes that are not actually played in the audio,
     //! or vice versa. also, sheet chords are typically quantized to integer beats or even bars.)
-    ARA_ADDENDUM(2_0_Final) kARAContentTypeSheetChords = 45
+    ARA_ADDENDUM(2_0_Final) kARAContentTypeSheetChords = 45,
+//@}
+
+//! @name Lyrics scope descriptions.
+//@{
+    //! Returns const ARAContentLyricsEntry * to describe monophonic lyrics over time,
+	//! preferably separated into individual syllables
+	//! \todo we need to detail the workflow if the lyrics are entered as a series of words
+	//!       and the host does not know how to split it into syllables - when the plug-in
+	//!       reads lyrics that aren't spilt into syllables, should it just do this and
+	//!       notify the host right back via contentChanged...?
+    ARA_DRAFT kARAContentTypeLyricEntries = 51,
+
+    //! Returns const ARAContentLyricsLanguage * to describe the language used for
+	//! kARAContentTypeLyrics
+	//! This is expressed as separate content type because it typically does rarely change,
+	//! and some hosts might not have UI to define this even if they allow to enter lyrics.
+    ARA_DRAFT kARAContentTypeLyricsLanguage = 52,
+
+    //! Returns const ARAContentPhoneme * for each monophonic phoneme articulated
+    ARA_DRAFT kARAContentTypePhonemes = 53
 //@}
 };
 
@@ -1733,6 +1756,93 @@ ARA_ADDENDUM(2_0_Final) typedef struct ARAContentChord
 } ARAContentChord;
 
 //! @}
+
+
+/***************************************************************************************************/
+//! @defgroup Model_Lyrics Lyrics (Added In ARA 3.0)
+//! \br
+//! ARA expresses lyrics both as a sequence of localized text and as a sequence of matching phonemes.
+//! There currently is only a single "monophonic" lyric defined per content object in order to keep
+//! the model reasonably simple. Also, the lyrics are not directly attached to notes - instead, this
+//! relationship is indicated by the notes covering the same time range as their respective lyrics.
+//! This approach is used in several DAWs as well, so it is expected to map well.
+//! @{
+
+//! Content reader event class: lyrics provided by kARAContentTypeLyricEntries.
+//! This content type describes the lyrics as they would be annotated in a score, i.e. typically
+//! positioned at abstract musical positions that are some integer division of a whole bar.
+//! The event position relates to ARAContentTempoEntry, a valid tempo map must be provided
+//! by any provider of ARAContentLyricsEntry.
+//! Each lyrics entry covers the time range from its start position to the start of the following
+//! one, with the last one not ending explicitly. Silence can be used as last entry if the duration
+//! of the last actual lyrics entry is important.
+//! Event sort order is by position.
+//! As with all content readers, a pointer to this struct retrieved via getContentReaderDataForEvent()
+//! is still owned by the callee and must remain valid until either getContentReaderDataForEvent()
+//! is called again or the reader is destroyed via destroyContentReader().
+ARA_ADDENDUM(2_0_Final) typedef struct ARAContentLyricsEntry
+{
+    //! Lyrics fragment, ideally a single syllable.
+	//! The lyrics can be a NULL pointer to indicate silence/pause.
+    ARAUtf8String lyrics;
+
+    //! Start time in quarter notes, see ARAContentTempoEntry.
+    ARAQuarterPosition position;
+} ARAContentLyricsEntry;
+
+//! Content reader event class: lyrics localization by kARAContentTypeLyricsLanguage.
+//! This content type identifies the language and optionally a regional dialect that the lyrics
+//! are articulated in.
+//! Focussing on the sound aspects of the language, it is encoded using a restricted subset
+//! of the [BCP 47 language tags](https://www.rfc-editor.org/info/bcp47) published by the
+//! [Internet Engineering Task Force (IETF)](https://www.ietf.org), forgoing extended language
+//! subtags, script subtags, extension subtags, private-use subtags, grandfathered tags and
+//! language group codes.
+//! The event position relates to ARAContentTempoEntry, a valid tempo map must be provided
+//! by any provider of ARAContentLyricsLanguage.
+//! Each language is valid until the following one, the first hint is assumed to also be valid
+//! any time before it is actually defined.
+//! Event sort order is by position.
+//! As with all content readers, a pointer to this struct retrieved via getContentReaderDataForEvent()
+//! is still owned by the callee and must remain valid until either getContentReaderDataForEvent()
+//! is called again or the reader is destroyed via destroyContentReader().
+ARA_ADDENDUM(2_0_Final) typedef struct ARAContentLyricsLanguage
+{
+    //! 7 bit ASCII lyrics language identifier
+	//! The identifier is the shortest ISO 639 1, 2 or 3 code for the desired language, optionally
+	//! augmented with an ISO 639 or UN M.49 numeric code identifying a regional variant if this
+	//! distinction is relevant to the sound of the output. Examples would be "ja" for generic
+	//! Japanese, "en-GB" for British English or "es-419" for Latin-American Spanish.
+	//! The regional variant is considered only a hint, the singing voice synthesis may not be
+	//! able to properly recreate some aspects of these variations or even ignore it completely.
+    ARAPersistentID language;
+
+    //! Start time in quarter notes, see ARAContentTempoEntry.
+    ARAQuarterPosition position;
+} ARAContentLyricsLanguage;
+
+//! Content reader event class: phonemes provided by kARAContentTypePhonemes.
+//! This content type describes the phonetic articulation of lyrics described via kARAContentTypeLyricEntries.
+//! The phonetic annotation should be concise, focussing on the musical application. For example,
+//! stress or pitch traces should usually not be provided here because they are implied by the music.
+//! Each phoneme covers the time range from its start position to the start of the following one,
+//! with the last one not ending explicitly. Silence can be used as last phoneme if the duration of
+//! the last audible phoneme is important.
+//! Event sort order is by position.
+//! As with all content readers, a pointer to this struct retrieved via getContentReaderDataForEvent()
+//! is still owned by the callee and must remain valid until either getContentReaderDataForEvent()
+//! is called again or the reader is destroyed via destroyContentReader().
+ARA_ADDENDUM(2_0_Final) typedef struct ARAContentPhoneme
+{
+    //! a single phoneme, encoded using the [Unicode representation](https://www.unicode.org/charts/PDF/U0250.pdf)
+	//! of the 2005 revision of the [International Phonetic Alphabet chart](https://www.internationalphoneticassociation.org/content/full-ipa-chart).
+	//! In order to keep the implementation reasonably simple, extensions to IPA should not be used.
+	//! The phoneme can be a NULL pointer to indicate silence/pause.
+    ARAUtf8String phoneme;
+
+    //! Start time in seconds, relative to the start of the song or the audio source/modification.
+    ARATimePosition position;
+} ARAContentPhoneme;
 
 //! @}
 
