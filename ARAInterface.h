@@ -1552,7 +1552,7 @@ ARA_ADDENDUM(2_0_Final) typedef ARAByte ARAKeySignatureIntervalUsage;
 //! This content type describes the key signatures as would be annotated in a score, not the local
 //! scales (which may be using some out-of-key notes via additional per-note accidentals).
 //! The event position relates to ARAContentTempoEntry, a valid tempo map must be provided
-//! by any provider of ARAContentBarSignature.
+//! by any provider of ARAContentKeySignature.
 //! Each key signature is valid until the following one, the first key signature is assumed to also
 //! be valid any time before it is actually defined.
 //! Event sort order is by position.
@@ -1646,7 +1646,7 @@ typedef ARAByte ARAChordIntervalUsage;
 
 //! Content reader event class: chords provided by kARAContentTypeSheetChords.
 //! The event position relates to ARAContentTempoEntry, a valid tempo map must be provided
-//! by any provider of ARAContentBarSignature.
+//! by any provider of ARAContentChord.
 //! Each chord is valid until the following one, and the first chord is assumed to also be valid
 //! any time before it is actually defined (i.e. its position is effectively ignored).
 //! The "undefined chord" markup (all intervals unused) can be used to express a range where no
