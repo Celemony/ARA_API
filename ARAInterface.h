@@ -487,9 +487,9 @@ typedef ARA_32_BIT_ENUM(ARAAPIGeneration)
 {
 #if !ARA_CPU_ARM
     //! private API between Studio One and Melodyne
-    kARAAPIGeneration_1_0_Draft = 1,
+    ARA_DEPRECATED(3_0_Draft) kARAAPIGeneration_1_0_Draft = 1,
     //! supported by Studio One, Cakewalk/SONAR, Samplitude Pro, Mixcraft, Waveform/Tracktion, Melodyne, VocAlign, AutoTune
-    kARAAPIGeneration_1_0_Final = 2,
+    ARA_DEPRECATED(3_0_Draft) kARAAPIGeneration_1_0_Final = 2,
     //! supported by Studio One, Logic Pro, Cubase/Nuendo, Cakewalk, REAPER, Melodyne, ReVoice Pro, VocAlign, Auto-Align, SpectraLayers
     kARAAPIGeneration_2_0_Draft = 3,
 #endif
@@ -3721,23 +3721,11 @@ enum ARA_ADDENDUM(2_0_Draft) { kARAEditorViewInterfaceMinSize = ARA_IMPLEMENTED_
 
 //! @defgroup Plug-In_Extension_Interface Deprecated: Plug-In Extension Interface.
 //! This interface was used before ARA 2.0 defined dedicated plug-in roles.
-//! It is only to be implemented when ARA 1 backwards compatibility is desired.
-//! An ARA 1 call to set/removePlaybackRegion() in this interface is equivalent
-//! to calling both set/removePlaybackRegion() in ARAPlaybackRendererInterface
-//! and add/removePlaybackRegion() in ARAEditorRendererInterface.
-//! To some extend ARA 1 also uses this to for tasks now associated with
-//! ARAEditorViewInterface: opening the UI of an ARA 1 plug-in instance is
-//! interpreted as selection of the playback region set via this interface.
+//! It has been removed with ARA 3.0.
 //! @{
 
 ARA_DEPRECATED(2_0_Draft) typedef ARA_REF(ARAPlugInExtensionRef);
-ARA_DEPRECATED(2_0_Draft) typedef struct ARAPlugInExtensionInterface
-{
-    ARASize structSize;
-    void (ARA_CALL *setPlaybackRegion) (ARAPlugInExtensionRef plugInExtensionRef, ARAPlaybackRegionRef playbackRegionRef);
-    void (ARA_CALL *removePlaybackRegion) (ARAPlugInExtensionRef plugInExtensionRef, ARAPlaybackRegionRef playbackRegionRef);
-} ARAPlugInExtensionInterface;
-enum ARA_DEPRECATED(2_0_Draft) { kARAPlugInExtensionInterfaceMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAPlugInExtensionInterface, removePlaybackRegion) };
+ARA_DEPRECATED(2_0_Draft) typedef struct ARAPlugInExtensionInterface ARAPlugInExtensionInterface;
 
 //! @}
 
@@ -3754,7 +3742,9 @@ typedef struct ARAPlugInExtensionInstance
     //! @see_Versioned_Structs_
     ARASize structSize;
 
+    //! deprecated - write as NULL and never read
     ARA_DEPRECATED(2_0_Draft) ARAPlugInExtensionRef plugInExtensionRef;
+    //! deprecated - write as NULL and never read
     ARA_DEPRECATED(2_0_Draft) const ARAPlugInExtensionInterface * plugInExtensionInterface;
 
 //! @name ARA2 Instance Roles
