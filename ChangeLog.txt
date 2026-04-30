@@ -10,6 +10,7 @@ Proposed Features which are still under discussion:
 
 
 Changes since previous releases:
+- initial draft of region sequence persistency
 - initial draft of Audio Unit version 3 support (App Extension, incl. IPC when not loaded in-process)
 - dropped support for ARA 1 and 2.0 Draft APIs
 
