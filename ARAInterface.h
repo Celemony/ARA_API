@@ -2152,6 +2152,15 @@ typedef struct ARAModelUpdateControllerInterface
     //! Plug-ins must send this notification reliably to avoid data loss when hosts rely on it in
     //! order to optimize saving ARA data only when it has actually changed.
     ARA_ADDENDUM(2_3_Final) void (ARA_CALL *notifyDocumentDataChanged) (ARAModelUpdateControllerHostRef controllerHostRef);
+
+    //! Message to the host when private, opaque state of the given region sequence changes (added
+    //! in ARA 3.0).
+    //! When restoring state, plug-ins will only make this call if the object state after loading is
+    //! not equal to the archived state. This can happen e.g when unarchiving encounters errors, or
+    //! when state is imported from older versions and converted to some updated model state.
+    //! Plug-ins must send this notification reliably to avoid data loss when hosts rely on it in
+    //! order to optimize saving ARA data only when it has actually changed.
+    ARA_DRAFT void (ARA_CALL *notifyRegionSequenceDataChanged) (ARAModelUpdateControllerHostRef controllerHostRef, ARARegionSequenceHostRef regionSequenceHostRef);
 } ARAModelUpdateControllerInterface;
 
 // Convenience constant for easy struct validation.
