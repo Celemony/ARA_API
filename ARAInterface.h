@@ -3521,6 +3521,20 @@ enum { kARAInterfaceConfigurationMinSize = ARA_IMPLEMENTED_STRUCT_SIZE(ARAInterf
     //! in the chunk is compatible, the plug-in must be able to read the data via
     //! ARADocumentControllerInterface::restoreObjectsFromArchive().
     ARA_ADDENDUM(2_0_Final) ARABool supportsStoringAudioFileChunks;
+
+    //! With the addition of generators in ARA 3.0, plug-ins need to indicate whether they can work
+    //! with sample-based audio sources. This is implicitly true for all older plug-ins that do not
+    //! include this flag in their factory.
+    ARA_DRAFT ARABool supportsSampleBasedAudioSources;
+
+    //! Flag to indicate whether the plug-in can work with abstract audio sources that contain no
+    //! audio samples but merely content descriptions. This is implicitly false for all older plug-ins
+    //! that do not include this flag in their factory.
+    ARA_DRAFT ARABool supportsContentOnlyAudioSources;
+
+    //! Some plug-ins such as Tonalic may only operate on audio sources that they provide themself
+    //! because they rely on crucial opaque data contained in the respective audio source archives.
+    ARA_DRAFT ARABool requiresPresetAudioSources;
 //@}
 } /*ARAFactory*/;
 
