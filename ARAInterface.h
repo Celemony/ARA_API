@@ -3162,29 +3162,58 @@ typedef struct ARADocumentControllerInterface
     ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *storeAudioSourceToAudioFileChunk) (ARADocumentControllerRef controllerRef, ARAArchiveWriterHostRef archiveWriterHostRef,
                                                                                   ARAAudioSourceRef audioSourceRef, ARAPersistentID * documentArchiveID, ARABool * openAutomatically);
 //@}
+
 //! @name Audio Modification Management
 //@{
-    //! Some hosts such as Pro Tools provide indicators whether a given plug-in's current
-    //! settings cause it to alter the sound of the original audio source, or preserve it so that
-    //! bypassing/removing the plug-in would not change the perceived audible result (note that
-    //! actual rendering involves using a playback region, which still may apply time-stretching
-    //! or pitch-shifting to the audio modification's potentially unaltered output).
+    //! Some hosts such as Pro Tools provide indicators whether a given plug-in's current settings
+    //! cause it to either alter the sound of its input, or to preserve it so that bypassing/removing
+    //! the plug-in would not change the perceived audible result.
+    //! This call allows hosts to check whether this is the case for the given audio modification.
+    //! However, the plug-in might take other data into account when calculating its output, such as
+    //! the musical context, any data associated with the region sequences, or even the content of
+    //! other playback regions (e.g. alignment plug-ins). Therefore, this call has been superseded
+    //! by isPlaybackRegionPreservingAudioSourceSignal(), which provides the more accurate answer
+    //! and should be used instead.
     //! \br
-    //! Changes to this state are tracked via ARAModelUpdateControllerInterface::notifyAudioModificationContentChanged()
-    //! with ::kARAContentUpdateSignalScopeRemainsUnchanged == false. Note that it is possible to
-    //! perform other edits such as reassigning the chords associated with the audio modification
+    //! Changes to this state are tracked via
+    //! ARAModelUpdateControllerInterface::notifyAudioModificationContentChanged()
+    //! with kARAContentUpdateSignalScopeRemainsUnchanged == false. Note that it is possible to
+    //! perform other edits (such as reassigning the chords associated with the audio modification)
+    //! which would not affect this state.
+    //! \br
+    //! See isPlaybackRegionPreservingAudioSourceSignal() for a discussion of potential false
+    //! negatives returned here.
+    ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *isAudioModificationPreservingAudioSourceSignal) (ARADocumentControllerRef controllerRef, ARAAudioModificationRef audioModificationRef);
+//@}
+
+//! @name Playback Region Management
+//@{
+    //! Some hosts such as Pro Tools provide indicators whether a given plug-in's current settings
+    //! cause it to either alter the sound of its input, or to preserve it so that bypassing/removing
+    //! the plug-in would not change the perceived audible result.
+    //! This call allows hosts to check whether this is the case for the given playback region.
+    //! It only reflects the state of the model, not the configuration of any potential playback
+    //! renderer which for example might need to perform additional sample rate conversion.
+    //! Changes to this state are tracked via
+    //! ARAModelUpdateControllerInterface::notifyPlaybackRegionContentChanged() with
+    //! kARAContentUpdateSignalScopeRemainsUnchanged == false. Note that it is possible to
+    //! perform other edits (such as reassigning the chords associated with the playback region)
     //! which would not affect this state.
     //! \br
     //! It is valid for plug-in implementations to deliver false negatives here to reasonably
     //! limit the cost of maintaining the state. For example, if the plug-in does some
     //! threshold-based processing, but the signal happens to never actually reach the threshold,
     //! the plug-in still may report to alter the sound.
-    //! Another example is pitch&time editing in a Melodyne-like plug-in: if notes are moved to a
-    //! different pitch or time position so that this flag is cleared, but later the user manually
-    //! moves them back to the original location, this might not cause this flag to turn back on.
+    //! Another example is object-based editing such as the pitch&time editing in a Melodyne:
+    //! if for example notes are moved to a different pitch or time position this flag will be cleared,
+    //! but if the user later manually moves them back to the original time and pitch location,
+    //! this might not cause this flag to turn back on.
     //! If however the user invokes undo, or some explicit reset command instead of the manual
     //! adjustment, then the plug-in should maintain this state properly.
-    ARA_ADDENDUM(2_0_Final) ARABool (ARA_CALL *isAudioModificationPreservingAudioSourceSignal) (ARADocumentControllerRef controllerRef, ARAAudioModificationRef audioModificationRef);
+    //! Another example where the plug-in is allowed to provide a false negative is if there are
+    //! changes that would alter the sound in the model but the playback region currently does not
+    //! cover the range of these changes.
+    ARA_DRAFT ARABool (ARA_CALL *isPlaybackRegionPreservingAudioSourceSignal) (ARADocumentControllerRef controllerRef, ARAPlaybackRegionRef playbackRegionRef);
 //@}
 } ARADocumentControllerInterface;
 
