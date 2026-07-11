@@ -1160,7 +1160,10 @@ typedef ARA_32_BIT_ENUM(ARAContentUpdateFlags)
     ARA_ADDENDUM(2_0_Final) kARAContentUpdateTuningScopeRemainsUnchanged = 1<<3,
 
     //! Content readers for key signatures, chords etc. are unaffected by the change. (added in ARA 2.0)
-    ARA_ADDENDUM(2_0_Final) kARAContentUpdateHarmonicScopeRemainsUnchanged = 1<<4
+    ARA_ADDENDUM(2_0_Final) kARAContentUpdateHarmonicScopeRemainsUnchanged = 1<<4,
+
+    //! Content readers for lyrics are unaffected by the change. (added in ARA 3.0)
+    ARA_DRAFT kARAContentUpdateLyricsScopeRemainsUnchanged = 1<<5
 };
 
 //! @}
@@ -1246,7 +1249,13 @@ typedef ARA_32_BIT_ENUM(ARAContentType)
     //! Returns const ARAContentChord * for each chord in a lead-sheet-like notation.
     //! (i.e. the sheet chord can imply notes that are not actually played in the audio,
     //! or vice versa. also, sheet chords are typically quantized to integer beats or even bars.)
-    ARA_ADDENDUM(2_0_Final) kARAContentTypeSheetChords = 45
+    ARA_ADDENDUM(2_0_Final) kARAContentTypeSheetChords = 45,
+//@}
+
+//! @name Lyrics scope descriptions.
+//@{
+    //! Returns const ARAContentLyricsEntry * to describe monophonic lyrics over time
+    ARA_DRAFT kARAContentTypeLyricEntries = 51
 //@}
 };
 
@@ -1734,7 +1743,116 @@ ARA_ADDENDUM(2_0_Final) typedef struct ARAContentChord
 
 //! @}
 
-//! @}
+
+/***************************************************************************************************/
+//! @defgroup Model_Lyrics Lyrics (Added In ARA 3.0)
+//! \br
+//! ARA expresses lyrics as a sequence of localized text, optionally associated with as a sequence
+//! of matching phonemes.
+//! There currently is only a single "monophonic" lyric defined per content object in order to keep
+//! the model reasonably simple. Also, the lyrics are not directly attached to notes - instead, this
+//! relationship is indicated by the notes covering the same time range as their respective lyrics.
+//! This approach is used in several DAWs as well, so it is expected to map well.
+//! @{
+
+//! Content reader event class: lyrics provided by kARAContentTypeLyricEntries.
+//! This content type describes the lyrics as they would be annotated in a score.
+//! Each lyrics entry is valid until the following one, and the first entry is assumed to also be valid
+//! any time before it is actually defined (i.e. its position is effectively ignored).
+//! Silence can be used to express a range where no lyrics should be articulated.
+//! Such gaps may appear between "regular" lyrics entries, or they can be used to limit the otherwise
+//! infinite duration of the first and last "regular" lyrics entry if desired.
+//! Event sort order is by position.
+//! As with all content readers, a pointer to this struct retrieved via getContentReaderDataForEvent()
+//! is still owned by the callee and must remain valid until either getContentReaderDataForEvent()
+//! is called again or the reader is destroyed via destroyContentReader().
+ARA_ADDENDUM(2_0_Final) typedef struct ARAContentLyricsEntry
+{
+    //! Text fragment.
+    //! Preferably, the lyrics should be split into a single syllable per entry to minimize any
+    //! potential ambiguities when mapping lyrics to notes.
+    //! If the provider of this data does not know how to identify individual syllables, the receiver
+    //! may choose to execute some algorithm to split the lyrics accordingly, and then notify this
+    //! content update back. If neither side provides such an algorithm, manual editing by the user
+    //! may be required in cases where the lyrics-to-note mapping is ambiguous.
+    //! The receiver must copy the lyrics, the pointer may be only valid as long as the containing
+    //! ARAContentLyricsEntry struct.
+    //! The lyrics can be a NULL pointer if no lyrics are specified (but maybe phonemes).
+    //! To indicate silence, an empty string is used.
+    //! Note that if a host or plug-in allows to edit the lyrics independently from its associated
+    //! phonemes, it must reset the phonemes after a lyrics edit to prevent inconsistent data
+    //! (which is another reason why splitting the lyrics into small chunks/syllables is preferable).
+    ARAUtf8String lyrics;
+
+    //! Word border encoding.
+    //! When splitting a multi-syllable word across several lyrics entries, this bool indicates that
+    //! the current entry is continuing the word that the previous entry ended with.
+    ARABool continuesPreviousWord;
+
+    //! Optional 7 bit ASCII lyrics language identifier, describing the language and optionally a
+    //! regional dialect used for the lyrics.
+    //! Focussing on the sound aspects of the language, the possible identifiers are a restricted
+    //! subset of the [BCP 47 language tags](https://www.rfc-editor.org/info/bcp47) published by the
+    //! [Internet Engineering Task Force (IETF)](https://www.ietf.org), forgoing extended language
+    //! subtags, script subtags, extension subtags, private-use subtags, grandfathered tags and
+    //! language group codes.
+    //! They consist of the shortest ISO 639 1, 2 or 3 code for the desired language, optionally
+    //! augmented with an ISO 639 or UN M.49 numeric code identifying a regional variant if this
+    //! distinction is relevant to the sound of the output. Examples would be "ja" for generic
+    //! Japanese, "en-GB" for British English or "es-419" for Latin-American Spanish.
+    //! The optional regional variant is considered only a hint, a given singing voice synthesizer
+    //! processing these lyrics is not required to properly recreate all aspects of the regional
+    //! variation and can even ignore it completely.
+    //! This identifier may be NULL if the provider does not know the language of the lyrics.
+    ARAPersistentID language;
+
+    //! Length of #phonemes and #phonemeOffsets (if provided).
+    ARASize phonemeCount;
+
+    //! Optional variable-sized C array of phonemes describing the articulation of the lyrics.
+    //! The list may be empty if no phonemes are known (yet), in which case phonemeCount should be 0,
+    //! and the phonemes NULL.
+    //! The phonemes are encoded using the [Unicode representation](https://www.unicode.org/charts/PDF/U0250.pdf)
+    //! of the 2005 revision of the
+    //! [International Phonetic Alphabet chart](https://www.internationalphoneticassociation.org/content/full-ipa-chart).
+    //! In order to keep the implementation reasonably simple, extensions to IPA should not be used,
+    //! except for these additional Unicode codes that are important for proper musical articulation
+    //! of silence between syllables:
+    //! - actual silence:
+    //!   0x0020 "SPACE"
+    //! - breath:
+    //!   0x1D112𝄒 "MUSICAL SYMBOL BREATH MARK"
+    //! The phonetic annotation should be concise, focussing on the musical application. For example,
+    //! stress or pitch traces should not be provided here because they are implied by the music.
+    //! Each phoneme covers the time range from its start position to the start of the following one,
+    //! with the last one not ending explicitly. Silence can be used as last phoneme if the duration of
+    //! the last audible phoneme is important.
+    //! Phoneme sort order is by position.
+    //! The receiver must copy the phonemes, the pointers may be only valid as long as the containing
+    //! ARAContentLyricsEntry struct.
+    //! A phoneme can be a NULL pointer to indicate silence/pause.
+    const ARAUtf8String * phonemes;
+
+    //! Optional variable-sized C array of phoneme locations related to the start of the lyrics entry.
+    //! The list may be empty if no phonemes are known (yet), in which case phonemeCount should be 0,
+    //! and the phonemeOffsets NULL.
+    //! phonemeOffsets can also be NULL if the content provider did generate phonemes but did not
+    //! specify their placement. In this case, the receiver may choose to automatically define these
+    //! positions, and then notify this content update back. This may also happen at some later time,
+    //! e.g. if the lyrics are entered before the notes which should perform the lyrics are provided.
+    //! In general, editing these notes at any later point (including tempo changes) will likely
+    //! trigger updates of the phoneme positions. Therefore, a receiver of ARAContentLyricsEntry
+    //! should compare the incoming data to its current model state and minimize unnecessary updates.
+    const ARATimePosition * phonemeOffsets;
+
+    //! Reliability of the phonemes and their offsets if provided.
+    //! For content that is kARAContentGradeInitial, no phonemes should be generated and
+    //! phonemeCount shall be 0.
+    ARAContentGrade phonemesGrade;
+
+    //! Start time in seconds, relative to the start of the song or the audio source/modification.
+    ARATimePosition position;
+} ARAContentLyricsEntry;
 
 
 /***************************************************************************************************/
