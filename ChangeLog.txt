@@ -10,6 +10,7 @@ Proposed Features which are still under discussion:
 
 
 Changes since previous releases:
+- initial draft of ARA generator plug-ins that operate merely based on content descriptions (no sample input)
 - initial draft of lyrics-related content types, tailored to support singing voice synthesis
 - initial draft of region sequence persistency
 - added isPlaybackRegionPreservingAudioSourceSignal(), superseding isAudioModificationPreservingAudioSourceSignal()
